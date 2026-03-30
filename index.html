@@ -6463,6 +6463,7 @@ function renderBusiness() {
   var html = '<div class="biz-tabs">';
   html += '<button class="biz-tab ' + (bizTab==='generate'?'active':'') + '" onclick="bizTab=\'generate\';renderBusiness()">Генератор</button>';
   html += '<button class="biz-tab ' + (bizTab==='saved'?'active':'') + '" onclick="bizTab=\'saved\';renderBusiness()">Сохранённые (' + bizSaved.length + ')</button>';
+  html += '<button class="biz-tab ' + (bizTab==='projects'?'active':'') + '" onclick="bizTab=\'projects\';renderBusiness()">Проекты (' + bizProjects.length + ')</button>';
   html += '<button class="biz-tab ' + (bizTab==='history'?'active':'') + '" onclick="bizTab=\'history\';renderBusiness()">История</button>';
   html += '</div>';
 
@@ -6515,6 +6516,8 @@ function renderBusiness() {
         html += renderBizCard(idea, i, true);
       });
     }
+  } else if (bizTab === 'projects') {
+    html += renderBizProjects();
   } else {
     if (bizHistory.length === 0) {
       html += '<div class="empty-msg">История пуста</div>';
@@ -6569,9 +6572,14 @@ function renderBizCard(idea, idx, isSavedList) {
   // Actions
   html += '<div style="padding:14px 20px;display:flex;gap:8px;border-top:1px solid var(--border);">';
   if (isSavedList) {
-    html += '<button class="btn btn-danger" style="flex:1;" onclick="removeSavedIdea(' + idx + ')">Удалить</button>';
-    html += '<button class="btn btn-primary" style="flex:1;" onclick="bizAnalyzeCompetitors(' + idx + ')">🔍 Анализ конкурентов</button>';
-    html += '<button class="btn" style="flex:1;" onclick="bizGenerateNames(' + idx + ')">💡 Названия</button>';
+    html += '<button class="btn btn-danger btn-sm" onclick="removeSavedIdea(' + idx + ')">✕</button>';
+    html += '<button class="btn btn-primary btn-sm" onclick="bizAnalyzeCompetitors(' + idx + ')">🔍 Конкуренты</button>';
+    html += '<button class="btn btn-sm" onclick="bizGenerateNames(' + idx + ')">💡 Названия</button>';
+    html += '<button class="btn btn-sm" onclick="bizSEOAnalysis(' + idx + ')">🔎 SEO</button>';
+    html += '<button class="btn btn-sm" onclick="bizSalesFunnel(' + idx + ')">📊 Воронка</button>';
+    html += '<button class="btn btn-sm" onclick="bizSWOT(' + idx + ')">📋 SWOT</button>';
+    html += '<button class="btn btn-sm" onclick="bizFinancialModel(' + idx + ')">💹 Финмодель</button>';
+    html += '<button class="btn btn-sm" style="background:var(--green-bg);color:var(--green);" onclick="bizStartProject(' + idx + ')">🚀 Начать проект</button>';
   } else {
     var isSaved = bizSaved.some(function(s) { return s.name === idea.name; });
     if (!isSaved) {
@@ -6677,6 +6685,129 @@ async function bizCompareRegions() {
     result.innerHTML = '<div class="dash-card"><h3>🌍 Сравнение регионов</h3><div style="font-size:13px;line-height:1.7;white-space:pre-line;">'+(d.content[0].text||'Ошибка')+'</div></div>';
   } catch(e) { result.innerHTML = '<p style="color:var(--red)">Ошибка: '+e.message+'</p>'; }
   if(btn) { btn.disabled = false; btn.textContent = '🌍 Сравнить регионы'; }
+}
+
+// ====== 5. SEO Niche Analyzer ======
+async function bizSEOAnalysis(savedIdx) {
+  var idea = bizSaved[savedIdx]; if(!idea) return;
+  var modal = document.getElementById('videoModal');
+  var player = document.getElementById('videoPlayer');
+  if(!modal||!player) return;
+  player.innerHTML = '<div style="padding:30px;max-width:600px;margin:auto;color:var(--text);background:var(--card-bg);border-radius:16px;margin-top:40px;max-height:85vh;overflow-y:auto;"><h3>🔎 SEO-анализ ниши</h3><div id="bizSEOResult"><div class="biz-loading"><div class="spinner"></div><p>AI анализирует SEO...</p></div></div><button class="btn" style="margin-top:16px;" onclick="closeVideoModal()">Закрыть</button></div>';
+  modal.classList.add('active');
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':bizApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',
+        content:'Проведи детальный SEO-анализ ниши для бизнеса: "'+idea.name+'"\nОписание: '+idea.description+'\n\nДай:\n1. ТОП-20 ключевых слов ниши с примерной частотностью и конкуренцией (низкая/средняя/высокая)\n2. Стоимость клика (CPC) в Google Ads для этих ключей\n3. Кто сейчас в ТОП-3 по этим запросам\n4. Long-tail ключевые слова (10 штук) — низкая конкуренция, хороший трафик\n5. Стратегия контент-маркетинга: какие статьи писать, сколько трафика можно получить за 3-6-12 месяцев\n6. Технические SEO рекомендации\n7. Оценка сложности выхода в ТОП-10 (по шкале 1-10)\n\nФормат: красивый структурированный текст с заголовками.'}]})});
+    var d = await r.json();
+    document.getElementById('bizSEOResult').innerHTML = '<div style="font-size:13px;line-height:1.7;white-space:pre-line;">'+(d.content[0].text||'Ошибка')+'</div>';
+  } catch(e) { document.getElementById('bizSEOResult').innerHTML = '<p style="color:var(--red)">'+e.message+'</p>'; }
+}
+
+// ====== 8. Sales Funnel ======
+async function bizSalesFunnel(savedIdx) {
+  var idea = bizSaved[savedIdx]; if(!idea) return;
+  var modal = document.getElementById('videoModal');
+  var player = document.getElementById('videoPlayer');
+  if(!modal||!player) return;
+  player.innerHTML = '<div style="padding:30px;max-width:600px;margin:auto;color:var(--text);background:var(--card-bg);border-radius:16px;margin-top:40px;max-height:85vh;overflow-y:auto;"><h3>📊 Воронка продаж</h3><div id="bizFunnelResult"><div class="biz-loading"><div class="spinner"></div><p>AI строит воронку...</p></div></div><button class="btn" style="margin-top:16px;" onclick="closeVideoModal()">Закрыть</button></div>';
+  modal.classList.add('active');
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':bizApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',
+        content:'Построй детальную воронку продаж для бизнеса: "'+idea.name+'"\nОписание: '+idea.description+'\n\nОпиши каждый этап воронки:\n\n1. ПРИВЛЕЧЕНИЕ (TOFU — Top of Funnel)\n- Каналы трафика и бюджет\n- Ожидаемый объём посетителей\n- Стоимость за посетителя\n\n2. ИНТЕРЕС (MOFU — Middle)\n- Как зацепить: лид-магниты, триалы, демо\n- Конверсия из посетителя в лид (%)\n- Email-последовательности\n\n3. РЕШЕНИЕ (BOFU — Bottom)\n- Как закрывать в продажу\n- Конверсия из лида в клиента (%)\n- Средний чек\n\n4. УДЕРЖАНИЕ\n- Как удержать клиента\n- LTV (lifetime value)\n- Churn rate\n\n5. РЕКОМЕНДАЦИИ\n- Реферальная программа\n- Upsell / Cross-sell\n\nДай конкретные цифры по каждому этапу. Покажи путь: 10,000 посетителей → X лидов → X клиентов → $X дохода.\n\nФормат: красивый текст с эмоджи и числами.'}]})});
+    var d = await r.json();
+    document.getElementById('bizFunnelResult').innerHTML = '<div style="font-size:13px;line-height:1.7;white-space:pre-line;">'+(d.content[0].text||'Ошибка')+'</div>';
+  } catch(e) { document.getElementById('bizFunnelResult').innerHTML = '<p style="color:var(--red)">'+e.message+'</p>'; }
+}
+
+// ====== 9. Project Tracker ======
+var bizProjects = JSON.parse(localStorage.getItem('bizProjects')||'[]');
+function saveBizProjects() { localStorage.setItem('bizProjects', JSON.stringify(bizProjects)); }
+
+function bizStartProject(savedIdx) {
+  var idea = bizSaved[savedIdx]; if(!idea) return;
+  var exists = bizProjects.some(function(p){return p.name===idea.name;});
+  if(exists) { alert('Проект уже создан'); return; }
+  var steps = (idea.steps||'').split(';').filter(function(s){return s.trim();}).map(function(s,i){
+    return {text:s.trim(), done:false, deadline:'', notes:''};
+  });
+  if(steps.length===0) steps = [{text:'Исследование рынка',done:false},{text:'MVP',done:false},{text:'Запуск',done:false},{text:'Маркетинг',done:false},{text:'Масштабирование',done:false}];
+  bizProjects.push({name:idea.name, desc:idea.description||'', steps:steps, createdAt:new Date().toISOString(), progress:0});
+  saveBizProjects();
+  alert('Проект создан! Перейди в "Проекты"');
+  renderBusiness();
+}
+
+function renderBizProjects() {
+  if(bizProjects.length===0) return '<div class="empty-msg">Нет проектов. Сохрани идею и нажми "Начать проект".</div>';
+  var html = '';
+  bizProjects.forEach(function(proj, pi) {
+    var done = proj.steps.filter(function(s){return s.done;}).length;
+    var total = proj.steps.length;
+    var pct = total>0 ? Math.round(done/total*100) : 0;
+    html += '<div class="dash-card" style="padding:0;overflow:hidden;">';
+    html += '<div style="padding:16px 20px;">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">';
+    html += '<strong style="font-size:15px;">'+proj.name+'</strong>';
+    html += '<span style="font-size:13px;font-weight:700;color:var(--accent);">'+pct+'%</span>';
+    html += '</div>';
+    html += '<div class="progress-bar" style="margin-bottom:12px;"><div class="progress-fill" style="width:'+pct+'%;background:var(--accent);"></div></div>';
+    proj.steps.forEach(function(step, si) {
+      html += '<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">';
+      html += '<input type="checkbox" '+(step.done?'checked':'')+' onchange="toggleProjectStep('+pi+','+si+')" style="margin-top:3px;width:18px;height:18px;accent-color:var(--accent);">';
+      html += '<span style="font-size:13px;flex:1;'+(step.done?'text-decoration:line-through;color:var(--text-muted);':'')+'">'+step.text+'</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+    html += '<div style="padding:10px 20px;border-top:1px solid var(--border);display:flex;gap:8px;">';
+    html += '<button class="btn btn-danger btn-sm" style="flex:1;" onclick="deleteProject('+pi+')">Удалить</button>';
+    html += '</div></div>';
+  });
+  return html;
+}
+
+function toggleProjectStep(pi, si) {
+  bizProjects[pi].steps[si].done = !bizProjects[pi].steps[si].done;
+  saveBizProjects(); renderBusiness();
+}
+function deleteProject(pi) {
+  if(!confirm('Удалить проект?')) return;
+  bizProjects.splice(pi,1); saveBizProjects(); renderBusiness();
+}
+
+// ====== 10. SWOT Analysis ======
+async function bizSWOT(savedIdx) {
+  var idea = bizSaved[savedIdx]; if(!idea) return;
+  var modal = document.getElementById('videoModal');
+  var player = document.getElementById('videoPlayer');
+  if(!modal||!player) return;
+  player.innerHTML = '<div style="padding:30px;max-width:600px;margin:auto;color:var(--text);background:var(--card-bg);border-radius:16px;margin-top:40px;max-height:85vh;overflow-y:auto;"><h3>📋 SWOT-анализ</h3><div id="bizSWOTResult"><div class="biz-loading"><div class="spinner"></div><p>AI проводит SWOT-анализ...</p></div></div><button class="btn" style="margin-top:16px;" onclick="closeVideoModal()">Закрыть</button></div>';
+  modal.classList.add('active');
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':bizApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2500,messages:[{role:'user',
+        content:'Проведи SWOT-анализ для бизнес-идеи: "'+idea.name+'"\nОписание: '+idea.description+'\n\nДля каждого раздела дай 5-7 пунктов с пояснениями:\n\n💪 STRENGTHS (Сильные стороны) — внутренние преимущества\n⚠️ WEAKNESSES (Слабые стороны) — внутренние ограничения\n🚀 OPPORTUNITIES (Возможности) — внешние факторы в пользу\n🔴 THREATS (Угрозы) — внешние риски\n\nВ конце дай стратегические выводы:\n- SO стратегия (используй силы для возможностей)\n- WO стратегия (преодолей слабости через возможности)\n- ST стратегия (используй силы против угроз)\n- WT стратегия (минимизируй слабости и угрозы)\n\nФормат: красивый текст с эмоджи.'}]})});
+    var d = await r.json();
+    document.getElementById('bizSWOTResult').innerHTML = '<div style="font-size:13px;line-height:1.7;white-space:pre-line;">'+(d.content[0].text||'Ошибка')+'</div>';
+  } catch(e) { document.getElementById('bizSWOTResult').innerHTML = '<p style="color:var(--red)">'+e.message+'</p>'; }
+}
+
+// ====== 11. Financial Model ======
+async function bizFinancialModel(savedIdx) {
+  var idea = bizSaved[savedIdx]; if(!idea) return;
+  var modal = document.getElementById('videoModal');
+  var player = document.getElementById('videoPlayer');
+  if(!modal||!player) return;
+  player.innerHTML = '<div style="padding:30px;max-width:600px;margin:auto;color:var(--text);background:var(--card-bg);border-radius:16px;margin-top:40px;max-height:85vh;overflow-y:auto;"><h3>💹 Финансовая модель</h3><div id="bizFinResult"><div class="biz-loading"><div class="spinner"></div><p>AI строит финмодель...</p></div></div><button class="btn" style="margin-top:16px;" onclick="closeVideoModal()">Закрыть</button></div>';
+  modal.classList.add('active');
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':bizApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3500,messages:[{role:'user',
+        content:'Построй финансовую модель на 12 месяцев для бизнеса: "'+idea.name+'"\nОписание: '+idea.description+'\n\nТаблица по месяцам (1-12):\n\nДОХОДЫ:\n- Подписки / Продажи\n- Реклама\n- Другие источники\n- ИТОГО доход\n\nРАСХОДЫ:\n- Хостинг/Инфраструктура\n- Маркетинг\n- Контент/Разработка\n- Зарплаты (если есть)\n- Прочие\n- ИТОГО расходы\n\nПрибыль/Убыток по месяцам\nНакопленный Cash Flow\n\nТакже дай:\n- Unit economics: CAC, LTV, LTV/CAC ratio\n- Break-even point\n- Margin %\n- Прогноз на 2-й и 3-й год\n\nВсе цифры в долларах, РЕАЛИСТИЧНЫЕ.\n\nФормат: текстовая таблица + пояснения.'}]})});
+    var d = await r.json();
+    document.getElementById('bizFinResult').innerHTML = '<div style="font-size:12px;line-height:1.6;white-space:pre-line;font-family:monospace;">'+(d.content[0].text||'Ошибка')+'</div>';
+  } catch(e) { document.getElementById('bizFinResult').innerHTML = '<p style="color:var(--red)">'+e.message+'</p>'; }
 }
 
 function saveBizKey() {
