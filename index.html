@@ -6898,15 +6898,25 @@ async function generateIdea() {
     var text = data.content[0].text;
     var jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
-      var idea = JSON.parse(jsonMatch[0]);
-      bizHistory.push(idea);
-      localStorage.setItem('bizHistory', JSON.stringify(bizHistory));
-      result.innerHTML = renderBizCard(idea, -1, false);
+      try {
+        // Очищаем JSON от проблемных символов
+        var cleaned = jsonMatch[0]
+          .replace(/[\x00-\x1F\x7F]/g, function(c) { return c === '\n' || c === '\r' || c === '\t' ? ' ' : ''; })
+          .replace(/,\s*}/g, '}')
+          .replace(/,\s*]/g, ']');
+        var idea = JSON.parse(cleaned);
+        bizHistory.push(idea);
+        localStorage.setItem('bizHistory', JSON.stringify(bizHistory));
+        result.innerHTML = renderBizCard(idea, -1, false);
+      } catch(parseErr) {
+        // Если JSON сломан — показываем как текст
+        result.innerHTML = '<div class="dash-card"><div style="font-size:13px;line-height:1.7;white-space:pre-line;">' + text.replace(/[{}"]/g, function(c) { return c==='"'?'':c==='{'?'':c==='}'?'':c; }) + '</div></div>';
+      }
     } else {
-      result.innerHTML = '<div class="dash-card"><p>' + text + '</p></div>';
+      result.innerHTML = '<div class="dash-card"><div style="font-size:13px;line-height:1.7;white-space:pre-line;">' + text + '</div></div>';
     }
   } catch(e) {
-    result.innerHTML = '<div class="dash-card" style="color:var(--red)">Ошибка соединения: ' + e.message + '</div>';
+    result.innerHTML = '<div class="dash-card" style="color:var(--red)">Ошибка: ' + e.message + '</div>';
   }
 
   btn.disabled = false;
