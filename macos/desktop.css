@@ -1,0 +1,1073 @@
+/* ========================================================
+   DESKTOP CSS — Motivation App
+   Makes the mobile-first app (max-width: 480px) look great
+   on tablets and desktops while preserving mobile layout.
+   ======================================================== */
+
+/* ========== CSS VARIABLES ========== */
+@media (min-width: 768px) {
+  :root {
+    --sidebar-width: 240px;
+    --content-max-w: 900px;
+    --sidebar-bg: #f8f9fc;
+    --sidebar-border: #e8eaf0;
+    --sidebar-hover: rgba(108, 92, 231, 0.06);
+    --sidebar-active-bg: rgba(108, 92, 231, 0.1);
+    --lift-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --sidebar-width: 280px;
+    --content-max-w: 1000px;
+  }
+}
+
+/* ==========================================================
+   SIDEBAR
+   ========================================================== */
+.sidebar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+    z-index: 150;
+    padding: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ----- Logo ----- */
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 20px 20px;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .sidebar-logo::before {
+    content: '';
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    box-shadow: 0 2px 8px rgba(108, 92, 231, 0.3);
+  }
+
+  /* ----- Navigation ----- */
+  .sidebar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 8px 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+  }
+
+  .sidebar-item:hover {
+    background: var(--sidebar-hover);
+    color: var(--text);
+  }
+
+  .sidebar-item .sidebar-icon {
+    font-size: 18px;
+    width: 24px;
+    min-width: 24px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar-item.active {
+    background: var(--sidebar-active-bg);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .sidebar-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 20px;
+    border-radius: 0 3px 3px 0;
+    background: var(--accent);
+  }
+
+  /* ----- User info ----- */
+  .sidebar-user {
+    padding: 16px 20px;
+    border-top: 1px solid var(--sidebar-border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .sidebar-user-avatar {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-bg), var(--accent-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .sidebar-user-info {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .sidebar-user-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sidebar-user-email {
+    font-size: 11px;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sidebar-logout {
+    padding: 6px;
+    border-radius: 8px;
+    font-size: 16px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar-logout:hover {
+    background: var(--red-bg);
+    color: var(--red);
+  }
+}
+
+/* ==========================================================
+   TABLET — Collapsed sidebar (icons only)
+   ========================================================== */
+@media (min-width: 768px) and (max-width: 1024px) {
+  :root {
+    --sidebar-width: 64px;
+  }
+
+  .sidebar-logo {
+    justify-content: center;
+    padding: 24px 16px 20px;
+    font-size: 0;
+    gap: 0;
+  }
+
+  .sidebar-nav {
+    padding: 8px 8px;
+  }
+
+  .sidebar-item {
+    justify-content: center;
+    padding: 11px;
+    gap: 0;
+    font-size: 0;
+  }
+
+  .sidebar-item .sidebar-icon {
+    font-size: 20px;
+  }
+
+  .sidebar-item .sidebar-label {
+    display: none;
+  }
+
+  .sidebar-item.active::before {
+    left: 0;
+  }
+
+  .sidebar-user {
+    flex-direction: column;
+    padding: 12px 8px;
+    gap: 8px;
+  }
+
+  .sidebar-user-info {
+    display: none;
+  }
+
+  .sidebar-logout {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ==========================================================
+   BODY & LAYOUT — Desktop overrides
+   ========================================================== */
+@media (min-width: 768px) {
+  body {
+    max-width: none;
+    margin: 0;
+    margin-left: var(--sidebar-width);
+  }
+
+  /* ----- Desktop content wrapper ----- */
+  .desktop-content {
+    max-width: var(--content-max-w);
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ----- Screens ----- */
+  .screen {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  /* ----- Hide mobile bottom nav ----- */
+  .bottom-nav {
+    display: none !important;
+  }
+
+  /* Remove bottom padding that was for nav */
+  .content {
+    padding-bottom: 32px !important;
+  }
+}
+
+/* ==========================================================
+   SECTION HEADER — Desktop
+   ========================================================== */
+@media (min-width: 768px) {
+  .section-header {
+    position: relative;
+    top: auto;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: none;
+    padding: 32px 0 16px;
+    max-width: var(--content-max-w);
+    margin: 0 auto;
+  }
+
+  .section-header h1 {
+    font-size: 24px;
+  }
+
+  .back-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--card-bg);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+  }
+
+  .back-btn:hover {
+    background: var(--bg);
+    box-shadow: var(--shadow);
+  }
+}
+
+/* ==========================================================
+   TABS — Desktop
+   ========================================================== */
+@media (min-width: 768px) {
+  .tabs {
+    max-width: var(--content-max-w);
+    margin: 0 auto;
+    padding: 0;
+    gap: 4px;
+  }
+
+  .tab {
+    font-size: 14px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+  }
+
+  .tab:hover:not(.active) {
+    background: var(--bg);
+    color: var(--text);
+  }
+}
+
+/* ==========================================================
+   CONTENT AREA — Desktop
+   ========================================================== */
+@media (min-width: 768px) {
+  .content {
+    max-width: var(--content-max-w);
+    margin: 0 auto;
+    padding: 16px 0 32px;
+  }
+}
+
+/* ==========================================================
+   MENU / DASHBOARD CARDS — Desktop grid
+   ========================================================== */
+@media (min-width: 768px) {
+  .menu-greeting {
+    padding-top: 40px;
+    padding-bottom: 8px;
+  }
+
+  .menu-greeting h1 {
+    font-size: 28px;
+  }
+
+  .menu-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .menu-card {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .menu-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--lift-shadow);
+  }
+}
+
+@media (min-width: 1200px) {
+  .menu-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .menu-greeting h1 {
+    font-size: 32px;
+  }
+}
+
+/* ==========================================================
+   DASH CARDS (Weight / Calories) — Desktop grid
+   ========================================================== */
+@media (min-width: 768px) {
+  .dash-card {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dash-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--lift-shadow);
+  }
+
+  /* Place multiple dash cards in a grid */
+  .content-section > .dash-card,
+  .content-section > .motivation-banner {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Create a grid context for dashboard sections */
+@media (min-width: 768px) {
+  #weightTab-dashboard.content-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  #weightTab-dashboard .motivation-banner {
+    grid-column: 1 / -1;
+  }
+
+  #weightTab-dashboard .dash-card {
+    margin-bottom: 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  #weightTab-dashboard.content-section {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+/* ==========================================================
+   STAT ROWS — Desktop
+   ========================================================== */
+@media (min-width: 768px) {
+  .stat-row {
+    padding: 10px 0;
+  }
+}
+
+/* ==========================================================
+   VIDEO GRID — Desktop
+   ========================================================== */
+@media (min-width: 768px) {
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .video-card {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .video-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--lift-shadow);
+  }
+
+  .video-thumb {
+    border-radius: 12px 12px 0 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .video-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .video-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+}
+
+/* ==========================================================
+   QUOTE CARDS — Desktop 2 columns
+   ========================================================== */
+@media (min-width: 768px) {
+  #tab-quotes.content-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  .quote-card {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 0;
+  }
+
+  .quote-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lift-shadow);
+  }
+
+  .quote-text {
+    font-size: 16px;
+  }
+}
+
+/* ==========================================================
+   EXERCISE CARDS — Desktop 2 columns
+   ========================================================== */
+@media (min-width: 768px) {
+  #tab-exercises.content-section,
+  .exercises-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  .exercise-card {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 0;
+  }
+
+  .exercise-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lift-shadow);
+  }
+}
+
+@media (min-width: 1200px) {
+  #tab-exercises.content-section,
+  .exercises-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+/* ==========================================================
+   DIET CARDS — Desktop 2 columns
+   ========================================================== */
+@media (min-width: 768px) {
+  #tab-diets.content-section,
+  .diets-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  .diet-card {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 0;
+  }
+
+  .diet-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lift-shadow);
+  }
+}
+
+/* ==========================================================
+   CHALLENGE CARDS — Desktop
+   ========================================================== */
+@media (min-width: 768px) {
+  .challenge-card {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .challenge-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--lift-shadow);
+  }
+}
+
+/* ==========================================================
+   ACHIEVEMENTS GRID — Desktop
+   ========================================================== */
+@media (min-width: 768px) {
+  .achievements-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .achievement-badge {
+    transition: all 0.25s ease;
+  }
+
+  .achievement-badge:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@media (min-width: 1200px) {
+  .achievements-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+  }
+}
+
+/* ==========================================================
+   FOOD ENTRIES — Desktop wider layout
+   ========================================================== */
+@media (min-width: 768px) {
+  .food-search {
+    max-width: 480px;
+  }
+
+  .food-search input {
+    font-size: 15px;
+    padding: 12px 16px 12px 44px;
+  }
+
+  .food-entry {
+    padding: 14px 16px;
+    transition: all 0.2s ease;
+  }
+
+  .food-entry:hover {
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+  }
+
+  .food-entry-info {
+    flex: 1;
+  }
+
+  .food-entry-name {
+    font-size: 15px;
+  }
+
+  .food-entry-detail {
+    font-size: 13px;
+  }
+
+  .food-entry-kcal {
+    font-size: 15px;
+    min-width: 80px;
+    text-align: right;
+  }
+
+  .food-add-btn {
+    transition: all 0.2s ease;
+  }
+
+  .food-add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(108, 92, 231, 0.3);
+  }
+}
+
+/* ==========================================================
+   CATEGORY FILTERS — Desktop
+   ========================================================== */
+@media (min-width: 768px) {
+  .category-filters {
+    gap: 8px;
+    padding: 4px 0 16px;
+  }
+
+  .cat-btn {
+    padding: 8px 18px;
+    font-size: 13px;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+  }
+
+  .cat-btn:hover:not(.active) {
+    background: var(--bg);
+    color: var(--text);
+  }
+}
+
+/* ==========================================================
+   MOTIVATION BANNER — Desktop
+   ========================================================== */
+@media (min-width: 768px) {
+  .motivation-banner {
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+
+  .motivation-banner h2 {
+    font-size: 20px;
+  }
+
+  .motivation-banner p {
+    font-size: 14px;
+  }
+
+  .motivation-banner-btn {
+    transition: all 0.2s ease;
+  }
+
+  .motivation-banner-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* ==========================================================
+   PROGRESS BARS — Desktop
+   ========================================================== */
+@media (min-width: 768px) {
+  .progress-bar {
+    height: 8px;
+    border-radius: 4px;
+  }
+
+  .limit-item {
+    padding: 10px 0;
+  }
+}
+
+/* ==========================================================
+   MODALS — Desktop centered (not bottom-sheet)
+   ========================================================== */
+@media (min-width: 768px) {
+  .modal-overlay {
+    align-items: center;
+    justify-content: center;
+    padding-left: var(--sidebar-width);
+  }
+
+  .modal {
+    border-radius: var(--radius);
+    max-width: 560px;
+    max-height: 80vh;
+    animation: scaleIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  }
+
+  .modal-handle {
+    display: none;
+  }
+
+  .modal-header {
+    padding: 20px 24px;
+  }
+
+  .modal-header h2 {
+    font-size: 18px;
+  }
+
+  .modal-close {
+    transition: all 0.2s ease;
+  }
+
+  .modal-close:hover {
+    background: var(--border);
+    transform: scale(1.05);
+  }
+
+  /* Modal body padding */
+  .modal-body,
+  .modal > div:not(.modal-header):not(.modal-handle) {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* ==========================================================
+   SETUP WIZARD — Desktop centered card
+   ========================================================== */
+@media (min-width: 768px) {
+  #setup.screen {
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  #setup .screen-inner,
+  #setup > *:not(.screen) {
+    max-width: 480px;
+    width: 100%;
+  }
+
+  .setup-progress {
+    max-width: 480px;
+    margin: 0 auto 24px;
+  }
+
+  .setup-step {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .setup-header h2 {
+    font-size: 22px;
+  }
+
+  .setup-header p {
+    font-size: 15px;
+  }
+
+  .setup-option {
+    transition: all 0.2s ease;
+  }
+
+  .setup-option:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+
+  .setup-btn {
+    transition: all 0.2s ease;
+  }
+
+  .setup-btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .setup-btn--next:hover,
+  .setup-btn--finish:hover {
+    box-shadow: 0 4px 14px rgba(108, 92, 231, 0.3);
+  }
+
+  .setup-nav {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .setup-input {
+    font-size: 16px;
+  }
+}
+
+/* ==========================================================
+   AUTH / INTRO SCREEN — Desktop centered card
+   ========================================================== */
+@media (min-width: 768px) {
+  #intro.screen {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .intro-video-wrap {
+    max-width: 420px;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .intro-title {
+    font-size: 28px;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .intro-subtitle {
+    font-size: 16px;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .intro-btn {
+    max-width: 420px;
+    transition: all 0.2s ease;
+  }
+
+  .intro-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.35);
+  }
+
+  .intro-timer {
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ==========================================================
+   TYPOGRAPHY — Larger sizes on desktop
+   ========================================================== */
+@media (min-width: 768px) {
+  html, body {
+    font-size: 15px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  h3 {
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 1200px) {
+  html, body {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+}
+
+/* ==========================================================
+   HOVER EFFECTS — Desktop only (hover capable)
+   ========================================================== */
+@media (hover: hover) and (min-width: 768px) {
+  /* Generic card hover lift */
+  .menu-card,
+  .dash-card,
+  .video-card,
+  .quote-card,
+  .exercise-card,
+  .diet-card,
+  .challenge-card {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Button glow on hover */
+  button:not(.tab):not(.cat-btn):not(.back-btn):not(.sidebar-item):not(.nav-item):not(.modal-close):not(.sidebar-logout) {
+    transition: all 0.2s ease;
+  }
+
+  /* Subtle link/button press feedback */
+  .sidebar-item:active,
+  .menu-card:active,
+  .video-card:active {
+    transform: scale(0.98);
+  }
+
+  /* Scrollbar styling for macOS/desktop feel */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* ==========================================================
+   SMOOTH TRANSITIONS — Global
+   ========================================================== */
+@media (min-width: 768px) {
+  .screen {
+    animation: desktopFadeIn 0.35s ease;
+  }
+
+  @keyframes desktopFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* ==========================================================
+   WATER TRACKER — Desktop
+   ========================================================== */
+@media (min-width: 768px) {
+  .water-glasses {
+    gap: 10px;
+  }
+
+  .water-glass {
+    width: 44px;
+    height: 44px;
+    transition: all 0.2s ease;
+  }
+
+  .water-glass:hover {
+    transform: scale(1.1);
+  }
+}
+
+/* ==========================================================
+   WEIGHT TABS — Desktop
+   ========================================================== */
+@media (min-width: 768px) {
+  #weightTabs.tabs,
+  .weight-tabs {
+    max-width: var(--content-max-w);
+    margin: 0 auto;
+  }
+}
+
+/* ==========================================================
+   LARGE DESKTOP — Extra spacing
+   ========================================================== */
+@media (min-width: 1200px) {
+  .section-header {
+    padding: 40px 0 20px;
+  }
+
+  .section-header h1 {
+    font-size: 28px;
+  }
+
+  .motivation-banner {
+    padding: 32px 40px;
+  }
+
+  .menu-greeting {
+    padding-top: 48px;
+  }
+
+  .content {
+    padding: 20px 0 40px;
+  }
+
+  .quote-text {
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .video-info h3 {
+    font-size: 15px;
+  }
+
+  .food-entry {
+    padding: 16px 20px;
+  }
+
+  .modal {
+    max-width: 600px;
+  }
+}
+
+/* ==========================================================
+   PRINT — Hide sidebar, show full content
+   ========================================================== */
+@media print {
+  .sidebar,
+  .bottom-nav {
+    display: none !important;
+  }
+
+  body {
+    margin-left: 0 !important;
+    max-width: none !important;
+  }
+}

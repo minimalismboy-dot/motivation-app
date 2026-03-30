@@ -1,0 +1,3636 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Мотивация и Здоровье</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ========== ROOT VARIABLES ========== */
+:root {
+  --bg: #f5f6fa;
+  --card-bg: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --accent: #6c5ce7;
+  --accent-light: #a29bfe;
+  --accent-bg: rgba(108, 92, 231, 0.08);
+  --green: #00b894;
+  --green-light: #55efc4;
+  --green-bg: rgba(0, 184, 148, 0.08);
+  --red: #e17055;
+  --red-bg: rgba(225, 112, 85, 0.08);
+  --orange: #fdcb6e;
+  --orange-bg: rgba(253, 203, 110, 0.12);
+  --blue: #74b9ff;
+  --blue-bg: rgba(116, 185, 255, 0.1);
+  --border: #e5e7eb;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+  --shadow-xl: 0 12px 40px rgba(0,0,0,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 8px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --max-w: 480px;
+  --nav-height: 68px;
+  --header-height: 56px;
+}
+
+/* ========== RESET & BASE ========== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100dvh;
+}
+
+body {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  position: relative;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+input, select, textarea { font-family: var(--font); }
+img { max-width: 100%; display: block; }
+
+/* ========== SCREEN SYSTEM ========== */
+.screen {
+  display: none;
+  min-height: 100dvh;
+  flex-direction: column;
+  animation: fadeIn 0.3s ease;
+}
+
+.screen.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes progressFill {
+  from { width: 0; }
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ========== INTRO SCREEN ========== */
+#intro {
+  background: var(--bg);
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  gap: 24px;
+  text-align: center;
+}
+
+.intro-video-wrap {
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 9/16;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #000;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+.intro-video-wrap video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.intro-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 20px;
+}
+
+.intro-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition);
+}
+
+.intro-play-btn:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.intro-play-btn::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 0 10px 18px;
+  border-color: transparent transparent transparent var(--accent);
+  margin-left: 3px;
+}
+
+.intro-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.intro-title span {
+  color: var(--accent);
+}
+
+.intro-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  max-width: 320px;
+}
+
+.intro-timer {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.intro-timer-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s infinite;
+}
+
+.intro-btn {
+  width: 100%;
+  max-width: 320px;
+  padding: 16px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: var(--radius);
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+}
+
+.intro-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+}
+
+.intro-btn:active {
+  transform: translateY(0);
+}
+
+/* ========== MAIN MENU ========== */
+#menu {
+  padding: 40px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.menu-greeting {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.menu-greeting h1 {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.menu-greeting p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.menu-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.menu-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.menu-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.menu-card:active {
+  transform: translateY(0);
+}
+
+.menu-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  margin-bottom: 14px;
+}
+
+.menu-card--motivation .menu-card-icon {
+  background: var(--accent-bg);
+}
+
+.menu-card--weight .menu-card-icon {
+  background: var(--green-bg);
+}
+
+.menu-card h2 {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.menu-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.menu-card-arrow {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.menu-card:hover .menu-card-arrow {
+  background: var(--accent);
+  color: #fff;
+}
+
+.menu-card--weight:hover .menu-card-arrow {
+  background: var(--green);
+}
+
+.menu-card-decoration {
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  opacity: 0.04;
+}
+
+.menu-card--motivation .menu-card-decoration {
+  background: var(--accent);
+}
+
+.menu-card--weight .menu-card-decoration {
+  background: var(--green);
+}
+
+/* ========== SECTION HEADER ========== */
+.section-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(245, 246, 250, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: var(--header-height);
+  border-bottom: 1px solid var(--border);
+}
+
+.back-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  flex-shrink: 0;
+  font-size: 18px;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.back-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.section-header h1 {
+  font-size: 18px;
+  font-weight: 700;
+  flex: 1;
+}
+
+.section-header-action {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.section-header-action:hover {
+  color: var(--accent);
+}
+
+/* ========== STICKY TABS ========== */
+.tabs {
+  display: flex;
+  gap: 6px;
+  padding: 8px 20px 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  position: sticky;
+  top: var(--header-height);
+  z-index: 49;
+  background: rgba(245, 246, 250, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: var(--transition);
+  color: var(--text-secondary);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.tab.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 2px 10px rgba(108, 92, 231, 0.25);
+}
+
+.tab:hover:not(.active) {
+  border-color: var(--accent-light);
+  color: var(--accent);
+}
+
+/* ========== CONTENT AREA ========== */
+.content {
+  flex: 1;
+  padding: 16px 20px 100px;
+}
+
+.content-section {
+  display: none;
+}
+
+.content-section.active {
+  display: block;
+  animation: fadeIn 0.25s ease;
+}
+
+/* ========== VIDEO GRID ========== */
+.video-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.video-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+
+.video-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.video-thumb {
+  aspect-ratio: 9/16;
+  background: linear-gradient(135deg, var(--accent-bg), var(--blue-bg));
+  position: relative;
+  overflow: hidden;
+}
+
+.video-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-thumb-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.video-card:hover .video-thumb-play {
+  opacity: 1;
+}
+
+.video-thumb-play::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 7px 0 7px 12px;
+  border-color: transparent transparent transparent var(--accent);
+  margin-left: 2px;
+}
+
+.video-duration {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.video-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.video-badge--new {
+  background: var(--green);
+  color: #fff;
+}
+
+.video-badge--popular {
+  background: var(--orange);
+  color: var(--text);
+}
+
+.video-badge--saved {
+  background: var(--accent);
+  color: #fff;
+}
+
+.video-info {
+  padding: 10px 12px;
+}
+
+.video-info h3 {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.video-info-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.video-save-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.video-save-btn.saved {
+  color: var(--red);
+}
+
+/* ========== CATEGORY FILTERS ========== */
+.category-filters {
+  display: flex;
+  gap: 8px;
+  padding: 0 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.category-filters::-webkit-scrollbar { display: none; }
+
+.cat-btn {
+  padding: 7px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--card-bg);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.cat-btn.active {
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-color: var(--accent-light);
+}
+
+/* ========== QUOTE CARDS ========== */
+.quote-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  position: relative;
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.quote-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.quote-card::before {
+  content: '\201C';
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--accent);
+  opacity: 0.15;
+  position: absolute;
+  top: 8px;
+  left: 18px;
+  line-height: 1;
+}
+
+.quote-text {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 12px;
+  padding-left: 4px;
+}
+
+.quote-author {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.quote-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.quote-action-btn {
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--bg);
+  color: var(--text-secondary);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.quote-action-btn:hover {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* ========== DASHBOARD CARDS ========== */
+.dash-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.dash-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.dash-card-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.dash-card-badge {
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.stat-row + .stat-row {
+  border-top: 1px solid var(--border);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-label-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.stat-value {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.stat-value span {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ========== LIMIT ITEMS ========== */
+.limit-item {
+  margin-bottom: 14px;
+}
+
+.limit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.limit-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.limit-value {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.limit-value b {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* ========== PROGRESS BARS ========== */
+.progress-bar {
+  height: 8px;
+  background: var(--bg);
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 50px;
+  transition: width 0.6s ease;
+  animation: progressFill 0.8s ease;
+}
+
+.progress-fill--accent { background: var(--accent); }
+.progress-fill--green { background: var(--green); }
+.progress-fill--orange { background: var(--orange); }
+.progress-fill--red { background: var(--red); }
+.progress-fill--blue { background: var(--blue); }
+
+.progress-bar--lg {
+  height: 12px;
+}
+
+/* ========== FOOD TRACKER ========== */
+.food-search {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.food-search input {
+  width: 100%;
+  padding: 14px 16px 14px 44px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: var(--transition);
+}
+
+.food-search input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+}
+
+.food-search input::placeholder {
+  color: var(--text-muted);
+}
+
+.food-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.food-add-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: var(--transition);
+}
+
+.food-add-btn:hover {
+  background: var(--accent-light);
+}
+
+.meal-section {
+  margin-bottom: 20px;
+}
+
+.meal-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meal-title-icon {
+  font-size: 16px;
+}
+
+.food-entry {
+  background: var(--card-bg);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.food-entry:hover {
+  box-shadow: var(--shadow);
+}
+
+.food-entry-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-xs);
+  background: var(--green-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.food-entry-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.food-entry-name {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.food-entry-detail {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.food-entry-kcal {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.food-entry-delete {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.food-entry-delete:hover {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.macros-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.macro-item {
+  flex: 1;
+  background: var(--card-bg);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.macro-value {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.macro-value--protein { color: var(--accent); }
+.macro-value--fat { color: var(--orange); }
+.macro-value--carbs { color: var(--green); }
+
+.macro-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.macro-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ========== WATER TRACKER ========== */
+.water-section {
+  text-align: center;
+}
+
+.water-progress-ring {
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 20px;
+  position: relative;
+}
+
+.water-progress-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.water-progress-ring circle {
+  fill: none;
+  stroke-width: 10;
+}
+
+.water-progress-ring .ring-bg {
+  stroke: var(--border);
+}
+
+.water-progress-ring .ring-fill {
+  stroke: var(--blue);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.water-amount {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.water-amount-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.water-amount-unit {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.water-glasses {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.water-glass {
+  width: 48px;
+  height: 56px;
+  border-radius: 10px 10px 14px 14px;
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.water-glass::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0%;
+  background: var(--blue-bg);
+  transition: var(--transition);
+}
+
+.water-glass.filled {
+  border-color: var(--blue);
+  background: var(--blue-bg);
+}
+
+.water-glass.filled::before {
+  height: 100%;
+  background: rgba(116, 185, 255, 0.15);
+}
+
+.water-glass:hover {
+  transform: scale(1.08);
+}
+
+.water-glass-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.water-add-btns {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.water-add-btn {
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  transition: var(--transition);
+}
+
+.water-add-btn:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.water-add-btn--primary {
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+}
+
+/* ========== EXERCISE CARDS ========== */
+.exercise-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.exercise-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-1px);
+}
+
+.exercise-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.exercise-icon--cardio { background: var(--red-bg); }
+.exercise-icon--strength { background: var(--accent-bg); }
+.exercise-icon--yoga { background: var(--green-bg); }
+.exercise-icon--stretch { background: var(--blue-bg); }
+
+.exercise-info {
+  flex: 1;
+}
+
+.exercise-name {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.exercise-detail {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.exercise-timer {
+  text-align: center;
+}
+
+.exercise-timer-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.exercise-timer-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.exercise-kcal {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green);
+  margin-top: 2px;
+}
+
+.exercise-start-btn {
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--accent);
+  color: #fff;
+  transition: var(--transition);
+}
+
+.exercise-start-btn:hover {
+  box-shadow: 0 2px 10px rgba(108, 92, 231, 0.3);
+}
+
+/* ========== DIET CARDS ========== */
+.diet-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.diet-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.diet-card-header {
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+}
+
+.diet-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.diet-card-info {
+  flex: 1;
+}
+
+.diet-card-name {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.diet-card-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.diet-card-toggle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.diet-card.expanded .diet-card-toggle {
+  transform: rotate(180deg);
+}
+
+.diet-card-body {
+  display: none;
+  padding: 0 20px 18px;
+  border-top: 1px solid var(--border);
+}
+
+.diet-card.expanded .diet-card-body {
+  display: block;
+  animation: fadeIn 0.25s ease;
+}
+
+.diet-pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.diet-pros h4,
+.diet-cons h4 {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.diet-pros h4 { color: var(--green); }
+.diet-cons h4 { color: var(--red); }
+
+.diet-pros li,
+.diet-cons li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  list-style: none;
+  padding-left: 14px;
+  position: relative;
+}
+
+.diet-pros li::before {
+  content: '+';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
+}
+
+.diet-cons li::before {
+  content: '−';
+  position: absolute;
+  left: 0;
+  color: var(--red);
+  font-weight: 700;
+}
+
+.diet-sample {
+  margin-top: 14px;
+  padding: 14px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+.diet-sample h4 {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.diet-sample p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ========== BOTTOM NAVIGATION ========== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--max-w);
+  height: var(--nav-height);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 8px;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  min-width: 56px;
+  position: relative;
+}
+
+.nav-item.active {
+  color: var(--accent);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  border-radius: 0 0 4px 4px;
+  background: var(--accent);
+}
+
+.nav-icon {
+  font-size: 22px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.nav-item.active .nav-label {
+  color: var(--accent);
+}
+
+/* ========== MODALS ========== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 200;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-overlay.active {
+  display: flex;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  background: var(--card-bg);
+  border-radius: var(--radius) var(--radius) 0 0;
+  width: 100%;
+  max-width: var(--max-w);
+  max-height: 90dvh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.modal--center {
+  border-radius: var(--radius);
+  margin: auto 20px;
+  max-height: 80dvh;
+  animation: scaleIn 0.25s ease;
+  align-self: center;
+}
+
+.modal-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 50px;
+  margin: 10px auto 0;
+}
+
+.modal-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header h2 {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.modal-close:hover {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+}
+
+/* Food Modal specifics */
+.food-modal-tabs {
+  display: flex;
+  gap: 0;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  margin-bottom: 16px;
+}
+
+.food-modal-tab {
+  flex: 1;
+  padding: 10px;
+  border-radius: var(--radius-xs);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.food-modal-tab.active {
+  background: var(--card-bg);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.food-modal-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.food-modal-item:hover {
+  background: var(--bg);
+}
+
+.food-modal-item-info {
+  flex: 1;
+}
+
+.food-modal-item-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.food-modal-item-detail {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.food-modal-item-add {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent-bg);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: var(--transition);
+}
+
+.food-modal-item-add:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Junk Food Warning Modal */
+.junk-warning-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--orange-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 16px;
+}
+
+.junk-warning-text {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.junk-warning-text strong {
+  color: var(--text);
+  display: block;
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+
+.junk-warning-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Video Player Modal */
+.video-player-modal {
+  background: #000;
+  border-radius: 0;
+  max-height: 100dvh;
+  height: 100dvh;
+}
+
+.video-player-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+}
+
+.video-player-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+}
+
+.video-player-body {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-player-body video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ========== SETUP WIZARD ========== */
+#setup {
+  background: var(--bg);
+  padding: 0;
+}
+
+.setup-progress {
+  padding: 20px 20px 0;
+  display: flex;
+  gap: 6px;
+}
+
+.setup-progress-step {
+  flex: 1;
+  height: 4px;
+  border-radius: 50px;
+  background: var(--border);
+  transition: var(--transition);
+}
+
+.setup-progress-step.active {
+  background: var(--accent);
+}
+
+.setup-progress-step.done {
+  background: var(--green);
+}
+
+.setup-header {
+  padding: 24px 20px 8px;
+  text-align: center;
+}
+
+.setup-header h2 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.setup-header p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.setup-step {
+  display: none;
+  padding: 20px;
+  flex: 1;
+}
+
+.setup-step.active {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+.setup-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.setup-option {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid var(--border);
+  transition: var(--transition);
+}
+
+.setup-option:hover {
+  border-color: var(--accent-light);
+}
+
+.setup-option.selected {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.setup-option-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.setup-option-label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.setup-option-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.setup-options--single {
+  grid-template-columns: 1fr;
+}
+
+.setup-options--triple {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.setup-input-group {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 18px;
+  border: 1px solid var(--border);
+}
+
+.setup-input-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.setup-input {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text);
+  outline: none;
+  transition: var(--transition);
+}
+
+.setup-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+}
+
+.setup-slider-wrap {
+  padding: 10px 0;
+}
+
+.setup-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 50px;
+  background: var(--border);
+  outline: none;
+}
+
+.setup-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 2px 8px rgba(108, 92, 231, 0.3);
+  cursor: pointer;
+}
+
+.setup-slider-values {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+.setup-nav {
+  padding: 16px 20px;
+  display: flex;
+  gap: 10px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+
+.setup-btn {
+  flex: 1;
+  padding: 16px;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.setup-btn--back {
+  background: var(--bg);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.setup-btn--next {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+}
+
+.setup-btn--next:hover {
+  box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+}
+
+.setup-btn--finish {
+  background: var(--green);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+}
+
+/* ========== WEIGHT HISTORY TABLE ========== */
+.weight-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.weight-table th {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 10px 14px;
+  text-align: left;
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+}
+
+.weight-table th:first-child { border-radius: var(--radius-xs) 0 0 0; }
+.weight-table th:last-child { border-radius: 0 var(--radius-xs) 0 0; }
+
+.weight-table td {
+  font-size: 13px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.weight-table .weight-change {
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.weight-change--down { color: var(--green); }
+.weight-change--up { color: var(--red); }
+.weight-change--same { color: var(--text-muted); }
+
+/* ========== PREDICTIONS SECTION ========== */
+.prediction-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.prediction-value {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.prediction-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+.prediction-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.prediction-timeline {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+}
+
+.prediction-timeline::-webkit-scrollbar { display: none; }
+
+.prediction-point {
+  min-width: 72px;
+  background: var(--card-bg);
+  border-radius: var(--radius-sm);
+  padding: 14px 10px;
+  text-align: center;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.prediction-point-month {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.prediction-point-weight {
+  font-size: 16px;
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+/* ========== MOTIVATION BANNER ========== */
+.motivation-banner {
+  background: linear-gradient(135deg, var(--accent), #a29bfe);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 16px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.motivation-banner::after {
+  content: '';
+  position: absolute;
+  right: -30px;
+  top: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+}
+
+.motivation-banner h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.motivation-banner p {
+  font-size: 13px;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+.motivation-banner-btn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 9px 20px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  transition: var(--transition);
+}
+
+.motivation-banner-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* ========== ACHIEVEMENT BADGES ========== */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.achievement-badge {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 16px 10px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.achievement-badge.unlocked {
+  border-color: var(--accent-light);
+}
+
+.achievement-badge.locked {
+  opacity: 0.5;
+  filter: grayscale(0.5);
+}
+
+.achievement-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.achievement-name {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.achievement-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+/* ========== DAILY CHALLENGE CARDS ========== */
+.challenge-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.challenge-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--accent-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.challenge-info {
+  flex: 1;
+}
+
+.challenge-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.challenge-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.challenge-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.challenge-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--bg);
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.challenge-progress-fill {
+  height: 100%;
+  border-radius: 50px;
+  background: var(--accent);
+  transition: width 0.5s ease;
+}
+
+.challenge-progress-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.challenge-status {
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.challenge-status--active {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.challenge-status--done {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+/* ========== STATS / HISTORY VIEW ========== */
+.stats-toggle {
+  display: flex;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  margin-bottom: 16px;
+}
+
+.stats-toggle-btn {
+  flex: 1;
+  padding: 9px;
+  border-radius: var(--radius-xs);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.stats-toggle-btn.active {
+  background: var(--card-bg);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.stats-chart-placeholder {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.stats-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stats-summary-item {
+  background: var(--card-bg);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.stats-summary-value {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.stats-summary-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* ========== EDIT PROFILE MODAL ========== */
+.profile-form-group {
+  margin-bottom: 16px;
+}
+
+.profile-form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.profile-form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: var(--transition);
+}
+
+.profile-form-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+}
+
+.profile-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* ========== BUTTONS ========== */
+.btn {
+  padding: 14px 24px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.25);
+}
+
+.btn--primary:hover {
+  box-shadow: 0 6px 20px rgba(108, 92, 231, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn--green {
+  background: var(--green);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(0, 184, 148, 0.25);
+}
+
+.btn--outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn--outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn--danger {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.btn--full {
+  width: 100%;
+}
+
+.btn--sm {
+  padding: 9px 16px;
+  font-size: 13px;
+  border-radius: var(--radius-sm);
+}
+
+/* ========== UTILITIES ========== */
+.text-center { text-align: center; }
+.text-muted { color: var(--text-muted); }
+.text-accent { color: var(--accent); }
+.text-green { color: var(--green); }
+.text-red { color: var(--red); }
+.fw-700 { font-weight: 700; }
+.fw-800 { font-weight: 800; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.hidden { display: none !important; }
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 50px;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 380px) {
+  .video-grid { gap: 8px; }
+  .achievements-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .macros-bar { gap: 6px; }
+  .setup-options--triple { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== INTRO SCREEN ==================== -->
+<div id="intro" class="screen active">
+  <div class="intro-video-wrap">
+    <video src="" poster="" muted playsinline></video>
+    <div class="intro-video-overlay"></div>
+    <button class="intro-play-btn" aria-label="Воспроизвести"></button>
+  </div>
+  <h1 class="intro-title">Твой путь к <span>лучшей версии</span> себя</h1>
+  <p class="intro-subtitle">Мотивация, питание и тренировки — всё в одном приложении</p>
+  <div class="intro-timer">
+    <span class="intro-timer-dot"></span>
+    <span id="introTimerText">Видео: 0:00 / 1:30</span>
+  </div>
+  <button class="intro-btn" id="introStartBtn">Начать</button>
+</div>
+
+<!-- ==================== MAIN MENU ==================== -->
+<div id="menu" class="screen">
+  <div class="menu-greeting">
+    <h1>Привет! 👋</h1>
+    <p>Что хочешь сделать сегодня?</p>
+  </div>
+  <div class="menu-cards">
+    <div class="menu-card menu-card--motivation" data-screen="motivation">
+      <div class="menu-card-icon">🔥</div>
+      <h2>Мотивация</h2>
+      <p>Видео, цитаты и челленджи для вдохновения каждый день</p>
+      <div class="menu-card-arrow">›</div>
+      <div class="menu-card-decoration"></div>
+    </div>
+    <div class="menu-card menu-card--weight" data-screen="weight">
+      <div class="menu-card-icon">⚖️</div>
+      <h2>Контроль веса</h2>
+      <p>Питание, вода, упражнения и диеты — полный контроль</p>
+      <div class="menu-card-arrow">›</div>
+      <div class="menu-card-decoration"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MOTIVATION SCREEN ==================== -->
+<div id="motivation" class="screen">
+  <div class="section-header">
+    <button class="back-btn" data-screen="menu">‹</button>
+    <h1>Мотивация</h1>
+    <button class="section-header-action" id="motivationSettingsBtn">⚙</button>
+  </div>
+  <div class="tabs" id="motivationTabs">
+    <button class="tab active" data-tab="videos">Видео</button>
+    <button class="tab" data-tab="saved">Сохранённые</button>
+    <button class="tab" data-tab="quotes">Цитаты</button>
+    <button class="tab" data-tab="challenges">Челленджи</button>
+  </div>
+  <div class="content">
+    <!-- ВИДЕО -->
+    <div id="tab-videos" class="content-section active">
+      <div class="motivation-banner">
+        <h3>🎯 Видео дня</h3>
+        <p>Посмотри мотивационное видео и начни день с правильным настроем</p>
+        <button class="motivation-banner-btn">Смотреть</button>
+      </div>
+      <div class="category-filters">
+        <button class="cat-btn active">Все</button>
+        <button class="cat-btn">Успех</button>
+        <button class="cat-btn">Спорт</button>
+        <button class="cat-btn">Здоровье</button>
+        <button class="cat-btn">Финансы</button>
+        <button class="cat-btn">Отношения</button>
+      </div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-thumb">
+            <span class="video-badge video-badge--new">Новое</span>
+            <button class="video-save-btn">♡</button>
+            <span class="video-duration">3:24</span>
+            <div class="video-thumb-play"></div>
+          </div>
+          <div class="video-info">
+            <h3>Никогда не сдавайся — путь к успеху</h3>
+            <div class="video-info-meta">
+              <span>🔥 12.5K</span>
+              <span>·</span>
+              <span>Успех</span>
+            </div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <span class="video-badge video-badge--popular">Хит</span>
+            <button class="video-save-btn">♡</button>
+            <span class="video-duration">5:10</span>
+            <div class="video-thumb-play"></div>
+          </div>
+          <div class="video-info">
+            <h3>Утренняя рутина чемпионов</h3>
+            <div class="video-info-meta">
+              <span>🔥 8.3K</span>
+              <span>·</span>
+              <span>Здоровье</span>
+            </div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <button class="video-save-btn">♡</button>
+            <span class="video-duration">2:45</span>
+            <div class="video-thumb-play"></div>
+          </div>
+          <div class="video-info">
+            <h3>Сила дисциплины: ежедневные привычки</h3>
+            <div class="video-info-meta">
+              <span>🔥 6.1K</span>
+              <span>·</span>
+              <span>Спорт</span>
+            </div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <button class="video-save-btn saved">♥</button>
+            <span class="video-duration">4:02</span>
+            <div class="video-thumb-play"></div>
+          </div>
+          <div class="video-info">
+            <h3>Как перестать откладывать на завтра</h3>
+            <div class="video-info-meta">
+              <span>🔥 15.7K</span>
+              <span>·</span>
+              <span>Успех</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- СОХРАНЁННЫЕ -->
+    <div id="tab-saved" class="content-section">
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-thumb">
+            <span class="video-badge video-badge--saved">Сохранено</span>
+            <button class="video-save-btn saved">♥</button>
+            <span class="video-duration">4:02</span>
+            <div class="video-thumb-play"></div>
+          </div>
+          <div class="video-info">
+            <h3>Как перестать откладывать на завтра</h3>
+            <div class="video-info-meta">
+              <span>🔥 15.7K</span>
+              <span>·</span>
+              <span>Успех</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ЦИТАТЫ -->
+    <div id="tab-quotes" class="content-section">
+      <div class="quote-card">
+        <p class="quote-text">Единственный способ делать великую работу — любить то, что ты делаешь.</p>
+        <p class="quote-author">— Стив Джобс</p>
+        <div class="quote-actions">
+          <button class="quote-action-btn">♡ Нравится</button>
+          <button class="quote-action-btn">↗ Поделиться</button>
+          <button class="quote-action-btn">⊕ Сохранить</button>
+        </div>
+      </div>
+      <div class="quote-card">
+        <p class="quote-text">Не жди идеального момента. Возьми момент и сделай его идеальным.</p>
+        <p class="quote-author">— Зоуи Дешанель</p>
+        <div class="quote-actions">
+          <button class="quote-action-btn">♡ Нравится</button>
+          <button class="quote-action-btn">↗ Поделиться</button>
+          <button class="quote-action-btn">⊕ Сохранить</button>
+        </div>
+      </div>
+      <div class="quote-card">
+        <p class="quote-text">Успех — это не финальная точка, провал — не фатален. Значение имеет лишь смелость продолжать.</p>
+        <p class="quote-author">— Уинстон Черчилль</p>
+        <div class="quote-actions">
+          <button class="quote-action-btn">♡ Нравится</button>
+          <button class="quote-action-btn">↗ Поделиться</button>
+          <button class="quote-action-btn">⊕ Сохранить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ЧЕЛЛЕНДЖИ -->
+    <div id="tab-challenges" class="content-section">
+      <div class="challenge-card">
+        <div class="challenge-icon">🏃</div>
+        <div class="challenge-info">
+          <div class="flex justify-between items-center mb-8">
+            <h3 class="challenge-title">7 дней активности</h3>
+            <span class="challenge-status challenge-status--active">Активен</span>
+          </div>
+          <p class="challenge-desc">Выполняй минимум 30 минут физической активности каждый день</p>
+          <div class="challenge-progress">
+            <div class="challenge-progress-bar">
+              <div class="challenge-progress-fill" style="width: 57%"></div>
+            </div>
+            <span class="challenge-progress-text">4/7</span>
+          </div>
+        </div>
+      </div>
+      <div class="challenge-card">
+        <div class="challenge-icon">💧</div>
+        <div class="challenge-info">
+          <div class="flex justify-between items-center mb-8">
+            <h3 class="challenge-title">Водный баланс</h3>
+            <span class="challenge-status challenge-status--done">Выполнен</span>
+          </div>
+          <p class="challenge-desc">Пей не менее 2 литров воды каждый день в течение 5 дней</p>
+          <div class="challenge-progress">
+            <div class="challenge-progress-bar">
+              <div class="challenge-progress-fill" style="width: 100%; background: var(--green)"></div>
+            </div>
+            <span class="challenge-progress-text" style="color: var(--green)">5/5</span>
+          </div>
+        </div>
+      </div>
+      <div class="challenge-card">
+        <div class="challenge-icon">🧘</div>
+        <div class="challenge-info">
+          <div class="flex justify-between items-center mb-8">
+            <h3 class="challenge-title">Утренняя медитация</h3>
+            <span class="challenge-status challenge-status--active">Активен</span>
+          </div>
+          <p class="challenge-desc">Медитируй 10 минут каждое утро в течение 14 дней</p>
+          <div class="challenge-progress">
+            <div class="challenge-progress-bar">
+              <div class="challenge-progress-fill" style="width: 21%"></div>
+            </div>
+            <span class="challenge-progress-text">3/14</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="fw-700 mt-24 mb-16">🏆 Достижения</h3>
+      <div class="achievements-grid">
+        <div class="achievement-badge unlocked">
+          <span class="achievement-icon">🌟</span>
+          <p class="achievement-name">Первый шаг</p>
+          <p class="achievement-desc">Завершить настройку</p>
+        </div>
+        <div class="achievement-badge unlocked">
+          <span class="achievement-icon">💧</span>
+          <p class="achievement-name">Водный мастер</p>
+          <p class="achievement-desc">5 дней нормы воды</p>
+        </div>
+        <div class="achievement-badge locked">
+          <span class="achievement-icon">🔥</span>
+          <p class="achievement-name">В огне</p>
+          <p class="achievement-desc">7 дней подряд</p>
+        </div>
+        <div class="achievement-badge locked">
+          <span class="achievement-icon">💪</span>
+          <p class="achievement-name">Силач</p>
+          <p class="achievement-desc">30 тренировок</p>
+        </div>
+        <div class="achievement-badge locked">
+          <span class="achievement-icon">🎯</span>
+          <p class="achievement-name">Цель</p>
+          <p class="achievement-desc">Достичь цели веса</p>
+        </div>
+        <div class="achievement-badge locked">
+          <span class="achievement-icon">👑</span>
+          <p class="achievement-name">Легенда</p>
+          <p class="achievement-desc">100 дней подряд</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== WEIGHT SCREEN ==================== -->
+<div id="weight" class="screen">
+  <div class="section-header">
+    <button class="back-btn" data-screen="menu">‹</button>
+    <h1>Контроль веса</h1>
+    <button class="section-header-action" id="editProfileBtn">✏</button>
+  </div>
+  <div class="content" style="padding-bottom: 120px;">
+
+    <!-- ДАШБОРД -->
+    <div id="weightTab-dashboard" class="content-section active">
+      <div class="motivation-banner" style="background: linear-gradient(135deg, var(--green), #55efc4);">
+        <h3>📊 Твой прогресс</h3>
+        <p>Ты уже сбросил 2.5 кг! До цели осталось 7.5 кг — продолжай в том же духе!</p>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Калории сегодня</span>
+          <span class="dash-card-badge">В норме</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-header">
+            <span class="limit-label">Съедено</span>
+            <span class="limit-value"><b>1 240</b> / 2 000 ккал</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill progress-fill--accent" style="width: 62%"></div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">
+            <span class="stat-label-icon" style="background: var(--accent-bg)">🍽</span>
+            Приёмы пищи
+          </span>
+          <span class="stat-value">3 <span>/ 5</span></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">
+            <span class="stat-label-icon" style="background: var(--green-bg)">🔥</span>
+            Сожжено
+          </span>
+          <span class="stat-value text-green">320 <span>ккал</span></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">
+            <span class="stat-label-icon" style="background: var(--blue-bg)">💧</span>
+            Вода
+          </span>
+          <span class="stat-value">5 <span>/ 8 стаканов</span></span>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Макронутриенты</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-header">
+            <span class="limit-label">Белки</span>
+            <span class="limit-value"><b>65г</b> / 120г</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill progress-fill--accent" style="width: 54%"></div>
+          </div>
+        </div>
+        <div class="limit-item">
+          <div class="limit-header">
+            <span class="limit-label">Жиры</span>
+            <span class="limit-value"><b>40г</b> / 70г</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill progress-fill--orange" style="width: 57%"></div>
+          </div>
+        </div>
+        <div class="limit-item">
+          <div class="limit-header">
+            <span class="limit-label">Углеводы</span>
+            <span class="limit-value"><b>150г</b> / 250г</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill progress-fill--green" style="width: 60%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Вес</span>
+          <button class="btn btn--sm btn--outline" id="weightHistoryBtn">История</button>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Текущий</span>
+          <span class="stat-value">77.5 <span>кг</span></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Цель</span>
+          <span class="stat-value text-accent">70.0 <span>кг</span></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Осталось</span>
+          <span class="stat-value text-green">-7.5 <span>кг</span></span>
+        </div>
+        <div class="mt-16">
+          <div class="limit-header">
+            <span class="limit-label">Прогресс к цели</span>
+            <span class="limit-value"><b>25%</b></span>
+          </div>
+          <div class="progress-bar progress-bar--lg">
+            <div class="progress-fill progress-fill--green" style="width: 25%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Прогноз -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Прогноз</span>
+        </div>
+        <div class="prediction-timeline">
+          <div class="prediction-point">
+            <p class="prediction-point-month">Апр</p>
+            <p class="prediction-point-weight">76.0</p>
+          </div>
+          <div class="prediction-point">
+            <p class="prediction-point-month">Май</p>
+            <p class="prediction-point-weight">74.5</p>
+          </div>
+          <div class="prediction-point">
+            <p class="prediction-point-month">Июн</p>
+            <p class="prediction-point-weight">73.0</p>
+          </div>
+          <div class="prediction-point">
+            <p class="prediction-point-month">Июл</p>
+            <p class="prediction-point-weight">71.5</p>
+          </div>
+          <div class="prediction-point" style="border-color: var(--green);">
+            <p class="prediction-point-month">Авг</p>
+            <p class="prediction-point-weight text-green">70.0 🎯</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Статистика -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Статистика</span>
+        </div>
+        <div class="stats-toggle">
+          <button class="stats-toggle-btn active">День</button>
+          <button class="stats-toggle-btn">Неделя</button>
+          <button class="stats-toggle-btn">Месяц</button>
+        </div>
+        <div class="stats-chart-placeholder">
+          <span class="text-muted">📊 График активности</span>
+        </div>
+        <div class="stats-summary">
+          <div class="stats-summary-item">
+            <p class="stats-summary-value text-accent">1 240</p>
+            <p class="stats-summary-label">Ккал съедено</p>
+          </div>
+          <div class="stats-summary-item">
+            <p class="stats-summary-value text-green">320</p>
+            <p class="stats-summary-label">Ккал сожжено</p>
+          </div>
+          <div class="stats-summary-item">
+            <p class="stats-summary-value" style="color: var(--blue);">1.25л</p>
+            <p class="stats-summary-label">Воды выпито</p>
+          </div>
+          <div class="stats-summary-item">
+            <p class="stats-summary-value" style="color: var(--orange);">45м</p>
+            <p class="stats-summary-label">Тренировки</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ПИТАНИЕ -->
+    <div id="weightTab-food" class="content-section">
+      <div class="macros-bar">
+        <div class="macro-item">
+          <p class="macro-value macro-value--protein">65</p>
+          <p class="macro-label">Белки</p>
+          <p class="macro-sub">/ 120г</p>
+        </div>
+        <div class="macro-item">
+          <p class="macro-value macro-value--fat">40</p>
+          <p class="macro-label">Жиры</p>
+          <p class="macro-sub">/ 70г</p>
+        </div>
+        <div class="macro-item">
+          <p class="macro-value macro-value--carbs">150</p>
+          <p class="macro-label">Углеводы</p>
+          <p class="macro-sub">/ 250г</p>
+        </div>
+      </div>
+
+      <div class="food-search">
+        <span class="food-search-icon">🔍</span>
+        <input type="text" placeholder="Найти продукт или блюдо..." id="foodSearchInput">
+        <button class="food-add-btn" id="openFoodModalBtn">+</button>
+      </div>
+
+      <div class="meal-section">
+        <p class="meal-title"><span class="meal-title-icon">🌅</span> Завтрак</p>
+        <div class="food-entry">
+          <div class="food-entry-icon">🥣</div>
+          <div class="food-entry-info">
+            <p class="food-entry-name">Овсянка с бананом</p>
+            <p class="food-entry-detail">200г · Б: 8г · Ж: 5г · У: 42г</p>
+          </div>
+          <span class="food-entry-kcal">280</span>
+          <button class="food-entry-delete">✕</button>
+        </div>
+        <div class="food-entry">
+          <div class="food-entry-icon">☕</div>
+          <div class="food-entry-info">
+            <p class="food-entry-name">Кофе с молоком</p>
+            <p class="food-entry-detail">250мл · Б: 3г · Ж: 2г · У: 5г</p>
+          </div>
+          <span class="food-entry-kcal">45</span>
+          <button class="food-entry-delete">✕</button>
+        </div>
+      </div>
+
+      <div class="meal-section">
+        <p class="meal-title"><span class="meal-title-icon">☀️</span> Обед</p>
+        <div class="food-entry">
+          <div class="food-entry-icon">🥗</div>
+          <div class="food-entry-info">
+            <p class="food-entry-name">Куриная грудка с рисом</p>
+            <p class="food-entry-detail">350г · Б: 35г · Ж: 8г · У: 55г</p>
+          </div>
+          <span class="food-entry-kcal">450</span>
+          <button class="food-entry-delete">✕</button>
+        </div>
+      </div>
+
+      <div class="meal-section">
+        <p class="meal-title"><span class="meal-title-icon">🌙</span> Ужин</p>
+        <div class="food-entry">
+          <div class="food-entry-icon">🐟</div>
+          <div class="food-entry-info">
+            <p class="food-entry-name">Лосось на пару с овощами</p>
+            <p class="food-entry-detail">300г · Б: 28г · Ж: 15г · У: 12г</p>
+          </div>
+          <span class="food-entry-kcal">310</span>
+          <button class="food-entry-delete">✕</button>
+        </div>
+      </div>
+
+      <div class="meal-section">
+        <p class="meal-title"><span class="meal-title-icon">🍎</span> Перекусы</p>
+        <div class="food-entry">
+          <div class="food-entry-icon">🍌</div>
+          <div class="food-entry-info">
+            <p class="food-entry-name">Банан</p>
+            <p class="food-entry-detail">120г · Б: 1г · Ж: 0г · У: 27г</p>
+          </div>
+          <span class="food-entry-kcal">105</span>
+          <button class="food-entry-delete">✕</button>
+        </div>
+      </div>
+
+      <button class="btn btn--primary btn--full mt-16" id="addFoodBtn">+ Добавить приём пищи</button>
+    </div>
+
+    <!-- ВОДА -->
+    <div id="weightTab-water" class="content-section">
+      <div class="water-section">
+        <div class="water-progress-ring">
+          <svg viewBox="0 0 160 160">
+            <circle class="ring-bg" cx="80" cy="80" r="70"></circle>
+            <circle class="ring-fill" cx="80" cy="80" r="70" stroke-dasharray="440" stroke-dashoffset="165"></circle>
+          </svg>
+          <div class="water-amount">
+            <p class="water-amount-value">1.25</p>
+            <p class="water-amount-unit">из 2.0 л</p>
+          </div>
+        </div>
+
+        <div class="water-glasses">
+          <div class="water-glass filled">💧</div>
+          <div class="water-glass filled">💧</div>
+          <div class="water-glass filled">💧</div>
+          <div class="water-glass filled">💧</div>
+          <div class="water-glass filled">💧</div>
+          <div class="water-glass">💧</div>
+          <div class="water-glass">💧</div>
+          <div class="water-glass">💧</div>
+        </div>
+        <p class="text-muted mb-16" style="font-size: 12px;">Каждый стакан = 250 мл</p>
+
+        <div class="water-add-btns">
+          <button class="water-add-btn">+150 мл</button>
+          <button class="water-add-btn water-add-btn--primary">+250 мл</button>
+          <button class="water-add-btn">+500 мл</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ДИЕТЫ -->
+    <div id="weightTab-diets" class="content-section">
+      <div class="diet-card">
+        <div class="diet-card-header">
+          <div class="diet-card-icon" style="background: var(--green-bg);">🥬</div>
+          <div class="diet-card-info">
+            <p class="diet-card-name">Средиземноморская</p>
+            <p class="diet-card-desc">Баланс, вкус и здоровье</p>
+          </div>
+          <div class="diet-card-toggle">▼</div>
+        </div>
+        <div class="diet-card-body">
+          <div class="diet-pros-cons">
+            <div class="diet-pros">
+              <h4>✓ Плюсы</h4>
+              <ul>
+                <li>Разнообразный рацион</li>
+                <li>Полезные жиры</li>
+                <li>Легко соблюдать</li>
+              </ul>
+            </div>
+            <div class="diet-cons">
+              <h4>✗ Минусы</h4>
+              <ul>
+                <li>Дорогие продукты</li>
+                <li>Медленный результат</li>
+              </ul>
+            </div>
+          </div>
+          <div class="diet-sample">
+            <h4>Пример меню на день</h4>
+            <p>Завтрак: греческий йогурт с орехами. Обед: рыба на гриле с овощами. Ужин: паста с оливковым маслом и томатами.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="diet-card">
+        <div class="diet-card-header">
+          <div class="diet-card-icon" style="background: var(--accent-bg);">🥩</div>
+          <div class="diet-card-info">
+            <p class="diet-card-name">Кето-диета</p>
+            <p class="diet-card-desc">Минимум углеводов, максимум жиров</p>
+          </div>
+          <div class="diet-card-toggle">▼</div>
+        </div>
+        <div class="diet-card-body">
+          <div class="diet-pros-cons">
+            <div class="diet-pros">
+              <h4>✓ Плюсы</h4>
+              <ul>
+                <li>Быстрое похудение</li>
+                <li>Нет чувства голода</li>
+                <li>Стабильная энергия</li>
+              </ul>
+            </div>
+            <div class="diet-cons">
+              <h4>✗ Минусы</h4>
+              <ul>
+                <li>Строгие ограничения</li>
+                <li>Кето-грипп вначале</li>
+                <li>Нагрузка на почки</li>
+              </ul>
+            </div>
+          </div>
+          <div class="diet-sample">
+            <h4>Пример меню на день</h4>
+            <p>Завтрак: яичница с беконом и авокадо. Обед: стейк с салатом. Ужин: лосось со шпинатом в сливочном соусе.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="diet-card">
+        <div class="diet-card-header">
+          <div class="diet-card-icon" style="background: var(--orange-bg);">⏰</div>
+          <div class="diet-card-info">
+            <p class="diet-card-name">Интервальное голодание</p>
+            <p class="diet-card-desc">Режим 16/8 — ешь в окне</p>
+          </div>
+          <div class="diet-card-toggle">▼</div>
+        </div>
+        <div class="diet-card-body">
+          <div class="diet-pros-cons">
+            <div class="diet-pros">
+              <h4>✓ Плюсы</h4>
+              <ul>
+                <li>Простые правила</li>
+                <li>Нет запрещённых продуктов</li>
+                <li>Ускоряет метаболизм</li>
+              </ul>
+            </div>
+            <div class="diet-cons">
+              <h4>✗ Минусы</h4>
+              <ul>
+                <li>Голод первые дни</li>
+                <li>Не подходит всем</li>
+              </ul>
+            </div>
+          </div>
+          <div class="diet-sample">
+            <h4>Пример меню на день</h4>
+            <p>Окно питания 12:00–20:00. Обед: курица с гречкой. Перекус: фрукты и орехи. Ужин: рыба с овощами.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="diet-card">
+        <div class="diet-card-header">
+          <div class="diet-card-icon" style="background: var(--blue-bg);">🥛</div>
+          <div class="diet-card-info">
+            <p class="diet-card-name">Высокобелковая</p>
+            <p class="diet-card-desc">Для сохранения мышц при похудении</p>
+          </div>
+          <div class="diet-card-toggle">▼</div>
+        </div>
+        <div class="diet-card-body">
+          <div class="diet-pros-cons">
+            <div class="diet-pros">
+              <h4>✓ Плюсы</h4>
+              <ul>
+                <li>Сохраняет мышцы</li>
+                <li>Долгое насыщение</li>
+              </ul>
+            </div>
+            <div class="diet-cons">
+              <h4>✗ Минусы</h4>
+              <ul>
+                <li>Нужно считать БЖУ</li>
+                <li>Однообразие</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- УПРАЖНЕНИЯ -->
+    <div id="weightTab-exercise" class="content-section">
+      <div class="dash-card mb-16">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Сегодня</span>
+          <span class="dash-card-badge">320 ккал</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Время тренировок</span>
+          <span class="stat-value">45 <span>мин</span></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Выполнено</span>
+          <span class="stat-value">2 <span>/ 3</span></span>
+        </div>
+      </div>
+
+      <h3 class="fw-700 mb-16">Кардио</h3>
+      <div class="exercise-card">
+        <div class="exercise-icon exercise-icon--cardio">🏃</div>
+        <div class="exercise-info">
+          <p class="exercise-name">Бег на месте</p>
+          <p class="exercise-detail">Высокая интенсивность · 150 ккал</p>
+        </div>
+        <div class="exercise-timer">
+          <p class="exercise-timer-value">15:00</p>
+          <p class="exercise-timer-label">мин</p>
+        </div>
+      </div>
+      <div class="exercise-card">
+        <div class="exercise-icon exercise-icon--cardio">🚴</div>
+        <div class="exercise-info">
+          <p class="exercise-name">Велосипед</p>
+          <p class="exercise-detail">Средняя интенсивность · 120 ккал</p>
+        </div>
+        <div class="exercise-timer">
+          <p class="exercise-timer-value">20:00</p>
+          <p class="exercise-timer-label">мин</p>
+        </div>
+      </div>
+
+      <h3 class="fw-700 mt-24 mb-16">Силовые</h3>
+      <div class="exercise-card">
+        <div class="exercise-icon exercise-icon--strength">💪</div>
+        <div class="exercise-info">
+          <p class="exercise-name">Отжимания</p>
+          <p class="exercise-detail">3 подхода × 15 раз</p>
+        </div>
+        <button class="exercise-start-btn">Начать</button>
+      </div>
+      <div class="exercise-card">
+        <div class="exercise-icon exercise-icon--strength">🏋️</div>
+        <div class="exercise-info">
+          <p class="exercise-name">Приседания</p>
+          <p class="exercise-detail">3 подхода × 20 раз</p>
+        </div>
+        <button class="exercise-start-btn">Начать</button>
+      </div>
+      <div class="exercise-card">
+        <div class="exercise-icon exercise-icon--strength">🤸</div>
+        <div class="exercise-info">
+          <p class="exercise-name">Планка</p>
+          <p class="exercise-detail">3 подхода × 45 сек</p>
+        </div>
+        <button class="exercise-start-btn">Начать</button>
+      </div>
+
+      <h3 class="fw-700 mt-24 mb-16">Растяжка и йога</h3>
+      <div class="exercise-card">
+        <div class="exercise-icon exercise-icon--yoga">🧘</div>
+        <div class="exercise-info">
+          <p class="exercise-name">Утренняя йога</p>
+          <p class="exercise-detail">Лёгкая · 60 ккал</p>
+        </div>
+        <div class="exercise-timer">
+          <p class="exercise-timer-value">10:00</p>
+          <p class="exercise-timer-label">мин</p>
+        </div>
+      </div>
+      <div class="exercise-card">
+        <div class="exercise-icon exercise-icon--stretch">🤸‍♀️</div>
+        <div class="exercise-info">
+          <p class="exercise-name">Растяжка всего тела</p>
+          <p class="exercise-detail">Лёгкая · 40 ккал</p>
+        </div>
+        <div class="exercise-timer">
+          <p class="exercise-timer-value">10:00</p>
+          <p class="exercise-timer-label">мин</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav" id="weightNav">
+    <button class="nav-item active" data-weight-tab="dashboard">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Дашборд</span>
+    </button>
+    <button class="nav-item" data-weight-tab="food">
+      <span class="nav-icon">🍽</span>
+      <span class="nav-label">Питание</span>
+    </button>
+    <button class="nav-item" data-weight-tab="water">
+      <span class="nav-icon">💧</span>
+      <span class="nav-label">Вода</span>
+    </button>
+    <button class="nav-item" data-weight-tab="diets">
+      <span class="nav-icon">📋</span>
+      <span class="nav-label">Диеты</span>
+    </button>
+    <button class="nav-item" data-weight-tab="exercise">
+      <span class="nav-icon">🏋️</span>
+      <span class="nav-label">Упражнения</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ==================== SETUP WIZARD ==================== -->
+<div id="setup" class="screen">
+  <div class="setup-progress">
+    <div class="setup-progress-step active"></div>
+    <div class="setup-progress-step"></div>
+    <div class="setup-progress-step"></div>
+    <div class="setup-progress-step"></div>
+  </div>
+
+  <!-- Шаг 1: Базовая информация -->
+  <div id="setupStep1" class="setup-step active">
+    <div class="setup-header">
+      <h2>Расскажи о себе</h2>
+      <p>Эти данные помогут составить план специально для тебя</p>
+    </div>
+
+    <div class="setup-input-group">
+      <label class="setup-input-label">Пол</label>
+      <div class="setup-options">
+        <div class="setup-option selected" data-value="male">
+          <span class="setup-option-icon">👨</span>
+          <p class="setup-option-label">Мужской</p>
+        </div>
+        <div class="setup-option" data-value="female">
+          <span class="setup-option-icon">👩</span>
+          <p class="setup-option-label">Женский</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-input-group">
+      <label class="setup-input-label">Возраст</label>
+      <input type="number" class="setup-input" placeholder="25" value="25" min="14" max="99" id="setupAge">
+      <div class="setup-slider-wrap">
+        <input type="range" class="setup-slider" min="14" max="80" value="25" id="setupAgeSlider">
+        <div class="setup-slider-values">
+          <span>14</span>
+          <span>80</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Шаг 2: Параметры тела -->
+  <div id="setupStep2" class="setup-step">
+    <div class="setup-header">
+      <h2>Параметры тела</h2>
+      <p>Укажи свой текущий вес и рост</p>
+    </div>
+
+    <div class="setup-input-group">
+      <label class="setup-input-label">Текущий вес (кг)</label>
+      <input type="number" class="setup-input" placeholder="80" value="80" min="30" max="250" id="setupWeight">
+      <div class="setup-slider-wrap">
+        <input type="range" class="setup-slider" min="30" max="200" value="80" id="setupWeightSlider">
+        <div class="setup-slider-values">
+          <span>30 кг</span>
+          <span>200 кг</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-input-group">
+      <label class="setup-input-label">Рост (см)</label>
+      <input type="number" class="setup-input" placeholder="175" value="175" min="100" max="230" id="setupHeight">
+      <div class="setup-slider-wrap">
+        <input type="range" class="setup-slider" min="100" max="230" value="175" id="setupHeightSlider">
+        <div class="setup-slider-values">
+          <span>100 см</span>
+          <span>230 см</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Шаг 3: Цели -->
+  <div id="setupStep3" class="setup-step">
+    <div class="setup-header">
+      <h2>Твоя цель</h2>
+      <p>Выбери основную цель и желаемый вес</p>
+    </div>
+
+    <div class="setup-input-group">
+      <label class="setup-input-label">Цель</label>
+      <div class="setup-options setup-options--single">
+        <div class="setup-option selected" data-value="lose">
+          <span class="setup-option-icon">📉</span>
+          <p class="setup-option-label">Похудеть</p>
+          <p class="setup-option-desc">Снизить вес безопасно и эффективно</p>
+        </div>
+        <div class="setup-option" data-value="maintain">
+          <span class="setup-option-icon">⚖️</span>
+          <p class="setup-option-label">Поддерживать вес</p>
+          <p class="setup-option-desc">Сохранить текущую форму</p>
+        </div>
+        <div class="setup-option" data-value="gain">
+          <span class="setup-option-icon">📈</span>
+          <p class="setup-option-label">Набрать массу</p>
+          <p class="setup-option-desc">Увеличить мышечную массу</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-input-group">
+      <label class="setup-input-label">Желаемый вес (кг)</label>
+      <input type="number" class="setup-input" placeholder="70" value="70" min="30" max="200" id="setupGoalWeight">
+    </div>
+
+    <div class="setup-input-group">
+      <label class="setup-input-label">Желаемая дата достижения</label>
+      <input type="date" class="setup-input" id="setupGoalDate" style="font-size: 15px;">
+    </div>
+  </div>
+
+  <!-- Шаг 4: Образ жизни -->
+  <div id="setupStep4" class="setup-step">
+    <div class="setup-header">
+      <h2>Образ жизни</h2>
+      <p>Расскажи о своей активности и привычках</p>
+    </div>
+
+    <div class="setup-input-group">
+      <label class="setup-input-label">Уровень активности</label>
+      <div class="setup-options setup-options--single">
+        <div class="setup-option" data-value="sedentary">
+          <span class="setup-option-icon">🪑</span>
+          <p class="setup-option-label">Минимальная</p>
+          <p class="setup-option-desc">Сидячий образ жизни</p>
+        </div>
+        <div class="setup-option selected" data-value="light">
+          <span class="setup-option-icon">🚶</span>
+          <p class="setup-option-label">Лёгкая</p>
+          <p class="setup-option-desc">Прогулки 1–3 раза в неделю</p>
+        </div>
+        <div class="setup-option" data-value="moderate">
+          <span class="setup-option-icon">🏃</span>
+          <p class="setup-option-label">Средняя</p>
+          <p class="setup-option-desc">Тренировки 3–5 раз в неделю</p>
+        </div>
+        <div class="setup-option" data-value="high">
+          <span class="setup-option-icon">🏋️</span>
+          <p class="setup-option-label">Высокая</p>
+          <p class="setup-option-desc">Тренировки 6–7 раз в неделю</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-input-group">
+      <label class="setup-input-label">Тип работы</label>
+      <div class="setup-options">
+        <div class="setup-option selected" data-value="office">
+          <span class="setup-option-icon">💻</span>
+          <p class="setup-option-label">Офис</p>
+        </div>
+        <div class="setup-option" data-value="mixed">
+          <span class="setup-option-icon">🏢</span>
+          <p class="setup-option-label">Смешанная</p>
+        </div>
+        <div class="setup-option" data-value="physical">
+          <span class="setup-option-icon">🔧</span>
+          <p class="setup-option-label">Физическая</p>
+        </div>
+        <div class="setup-option" data-value="remote">
+          <span class="setup-option-icon">🏠</span>
+          <p class="setup-option-label">Удалёнка</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="setup-nav">
+    <button class="setup-btn setup-btn--back" id="setupBackBtn">Назад</button>
+    <button class="setup-btn setup-btn--next" id="setupNextBtn">Далее</button>
+  </div>
+</div>
+
+<!-- ==================== MODALS ==================== -->
+
+<!-- Food Add Modal -->
+<div id="foodModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h2>Добавить продукт</h2>
+      <button class="modal-close" data-close-modal="foodModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="food-modal-tabs">
+        <button class="food-modal-tab active">Поиск</button>
+        <button class="food-modal-tab">Частые</button>
+        <button class="food-modal-tab">Свои</button>
+      </div>
+      <div class="food-search" style="margin-bottom: 12px;">
+        <span class="food-search-icon">🔍</span>
+        <input type="text" placeholder="Введите название...">
+      </div>
+      <div class="food-modal-item">
+        <div class="food-entry-icon">🍗</div>
+        <div class="food-modal-item-info">
+          <p class="food-modal-item-name">Куриная грудка</p>
+          <p class="food-modal-item-detail">100г · 165 ккал · Б:31 Ж:3.6 У:0</p>
+        </div>
+        <button class="food-modal-item-add">+</button>
+      </div>
+      <div class="food-modal-item">
+        <div class="food-entry-icon">🍚</div>
+        <div class="food-modal-item-info">
+          <p class="food-modal-item-name">Рис белый варёный</p>
+          <p class="food-modal-item-detail">100г · 130 ккал · Б:2.7 Ж:0.3 У:28</p>
+        </div>
+        <button class="food-modal-item-add">+</button>
+      </div>
+      <div class="food-modal-item">
+        <div class="food-entry-icon">🥚</div>
+        <div class="food-modal-item-info">
+          <p class="food-modal-item-name">Яйцо куриное</p>
+          <p class="food-modal-item-detail">1 шт · 155 ккал · Б:13 Ж:11 У:1.1</p>
+        </div>
+        <button class="food-modal-item-add">+</button>
+      </div>
+      <div class="food-modal-item">
+        <div class="food-entry-icon">🥛</div>
+        <div class="food-modal-item-info">
+          <p class="food-modal-item-name">Творог 5%</p>
+          <p class="food-modal-item-detail">100г · 121 ккал · Б:17 Ж:5 У:1.8</p>
+        </div>
+        <button class="food-modal-item-add">+</button>
+      </div>
+      <div class="food-modal-item">
+        <div class="food-entry-icon">🍌</div>
+        <div class="food-modal-item-info">
+          <p class="food-modal-item-name">Банан</p>
+          <p class="food-modal-item-detail">100г · 89 ккал · Б:1.1 Ж:0.3 У:23</p>
+        </div>
+        <button class="food-modal-item-add">+</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Junk Food Warning Modal -->
+<div id="junkWarning" class="modal-overlay">
+  <div class="modal modal--center">
+    <div class="modal-body">
+      <div class="junk-warning-icon">⚠️</div>
+      <div class="junk-warning-text">
+        <strong>Это вредная еда</strong>
+        Этот продукт содержит много калорий, сахара или трансжиров. Ты уверен, что хочешь его добавить?
+      </div>
+      <div class="junk-warning-btns">
+        <button class="btn btn--primary btn--full">Всё равно добавить</button>
+        <button class="btn btn--outline btn--full" data-close-modal="junkWarning">Выбрать другое</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Video Player Modal -->
+<div id="videoPlayer" class="modal-overlay">
+  <div class="modal video-player-modal">
+    <div class="video-player-header">
+      <button class="video-player-close" data-close-modal="videoPlayer">✕</button>
+      <button class="video-save-btn" style="position: static; background: rgba(255,255,255,0.2); color: #fff;">♡</button>
+    </div>
+    <div class="video-player-body">
+      <video src="" controls playsinline></video>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div id="editProfileModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h2>Редактировать профиль</h2>
+      <button class="modal-close" data-close-modal="editProfileModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="profile-form-row">
+        <div class="profile-form-group">
+          <label class="profile-form-label">Пол</label>
+          <select class="profile-form-input">
+            <option value="male">Мужской</option>
+            <option value="female">Женский</option>
+          </select>
+        </div>
+        <div class="profile-form-group">
+          <label class="profile-form-label">Возраст</label>
+          <input type="number" class="profile-form-input" value="25">
+        </div>
+      </div>
+      <div class="profile-form-row">
+        <div class="profile-form-group">
+          <label class="profile-form-label">Вес (кг)</label>
+          <input type="number" class="profile-form-input" value="77.5" step="0.1">
+        </div>
+        <div class="profile-form-group">
+          <label class="profile-form-label">Рост (см)</label>
+          <input type="number" class="profile-form-input" value="175">
+        </div>
+      </div>
+      <div class="profile-form-group">
+        <label class="profile-form-label">Цель (кг)</label>
+        <input type="number" class="profile-form-input" value="70" step="0.1">
+      </div>
+      <div class="profile-form-group">
+        <label class="profile-form-label">Уровень активности</label>
+        <select class="profile-form-input">
+          <option value="sedentary">Минимальная</option>
+          <option value="light" selected>Лёгкая</option>
+          <option value="moderate">Средняя</option>
+          <option value="high">Высокая</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--outline" data-close-modal="editProfileModal" style="flex:1;">Отмена</button>
+      <button class="btn btn--primary" style="flex:1;">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Weight History Modal -->
+<div id="weightHistoryModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h2>История веса</h2>
+      <button class="modal-close" data-close-modal="weightHistoryModal">✕</button>
+    </div>
+    <div class="modal-body" style="padding: 0;">
+      <table class="weight-table">
+        <thead>
+          <tr>
+            <th>Дата</th>
+            <th>Вес</th>
+            <th>Изменение</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>30 мар</td>
+            <td>77.5 кг</td>
+            <td><span class="weight-change weight-change--down">-0.3 кг</span></td>
+          </tr>
+          <tr>
+            <td>27 мар</td>
+            <td>77.8 кг</td>
+            <td><span class="weight-change weight-change--down">-0.5 кг</span></td>
+          </tr>
+          <tr>
+            <td>24 мар</td>
+            <td>78.3 кг</td>
+            <td><span class="weight-change weight-change--down">-0.2 кг</span></td>
+          </tr>
+          <tr>
+            <td>21 мар</td>
+            <td>78.5 кг</td>
+            <td><span class="weight-change weight-change--up">+0.1 кг</span></td>
+          </tr>
+          <tr>
+            <td>18 мар</td>
+            <td>78.4 кг</td>
+            <td><span class="weight-change weight-change--down">-0.6 кг</span></td>
+          </tr>
+          <tr>
+            <td>15 мар</td>
+            <td>79.0 кг</td>
+            <td><span class="weight-change weight-change--down">-0.5 кг</span></td>
+          </tr>
+          <tr>
+            <td>12 мар</td>
+            <td>79.5 кг</td>
+            <td><span class="weight-change weight-change--down">-0.5 кг</span></td>
+          </tr>
+          <tr>
+            <td>09 мар</td>
+            <td>80.0 кг</td>
+            <td><span class="weight-change weight-change--same">Начало</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--primary btn--full">Записать новый вес</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

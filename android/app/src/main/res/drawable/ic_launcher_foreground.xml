@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Flame icon -->
+    <path
+        android:fillColor="#e94560"
+        android:pathData="M54,22
+            C54,22 42,38 42,50
+            C42,56 45,62 50,65
+            C48,60 49,54 54,48
+            C59,54 60,60 58,65
+            C63,62 66,56 66,50
+            C66,38 54,22 54,22Z" />
+    <path
+        android:fillColor="#f39c12"
+        android:pathData="M54,36
+            C54,36 47,46 47,52
+            C47,56 49,59 52,61
+            C51,58 51.5,54 54,50
+            C56.5,54 57,58 56,61
+            C59,59 61,56 61,52
+            C61,46 54,36 54,36Z" />
+    <!-- Text: M -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M42,74 L42,84 L44.5,84 L44.5,78 L48,82 L51.5,78 L51.5,84 L54,84 L54,74 L48,80 Z
+            M56,74 L56,84 L58.5,84 L58.5,78 L62,82 L65.5,78 L65.5,84 L68,84 L68,74 L62,80 Z" />
+</vector>

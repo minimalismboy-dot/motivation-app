@@ -6480,17 +6480,7 @@ function renderBusiness() {
       html += '<div class="biz-input-area">';
       html += '<textarea id="bizPrompt" placeholder="Опиши какой тип сайта/бизнеса тебя интересует...\n\nНапример: HR платформа для малого бизнеса, игровой портал, SaaS для ресторанов, маркетплейс услуг..."></textarea>';
       html += '<div style="display:flex;gap:8px;margin-top:8px">';
-      html += '<select id="bizRegion" onchange="document.getElementById(\'bizRegionCustom\').style.display=this.value===\'custom\'?\'block\':\'none\'" style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card-bg);color:var(--text);font-size:13px;">';
-      html += '<option value="">Любой регион</option>';
-      html += '<option value="США">США</option><option value="Канада">Канада</option><option value="Европа">Европа</option>';
-      html += '<option value="Великобритания">Великобритания</option><option value="Германия">Германия</option><option value="Франция">Франция</option>';
-      html += '<option value="Австралия">Австралия</option><option value="ОАЭ / Дубай">ОАЭ / Дубай</option>';
-      html += '<option value="Латинская Америка">Латинская Америка</option><option value="Юго-Восточная Азия">Юго-Восточная Азия</option>';
-      html += '<option value="Япония">Япония</option><option value="Индия">Индия</option><option value="Африка">Африка</option>';
-      html += '<option value="custom">Другой (вписать)...</option>';
-      html += '</select>';
-      html += '</div>';
-      html += '<div id="bizRegionCustom" style="display:none;margin-top:8px;"><input type="text" id="bizRegionCustomInput" placeholder="Введи страну или регион..." style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card-bg);color:var(--text);font-size:13px;">';
+      html += '<input type="text" id="bizRegion" placeholder="Регион (напр. США, Европа, Канада...)" style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card-bg);color:var(--text);font-size:13px;">';
       html += '<select id="bizBudget" style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card-bg);color:var(--text);font-size:13px;">';
       html += '<option value="">Любой бюджет</option>';
       html += '<option value="$0-500">$0 — $500</option><option value="$500-2000">$500 — $2,000</option>';
@@ -6630,11 +6620,8 @@ async function generateIdea() {
   var prompt = document.getElementById('bizPrompt').value.trim();
   if (!prompt) { alert('Опиши что тебя интересует'); return; }
 
-  var regionSel = document.getElementById('bizRegion').value;
-  var region = regionSel === 'custom' ? (document.getElementById('bizRegionCustomInput').value || '').trim() : regionSel;
+  var region = (document.getElementById('bizRegion').value || '').trim();
   var budget = document.getElementById('bizBudget').value;
-  // Collect previously generated names to avoid repeats
-  var prevNames = bizHistory.map(function(h) { return h.name; }).concat(bizDisliked);
 
   var btn = document.getElementById('bizGenBtn');
   var result = document.getElementById('bizResult');
@@ -6642,12 +6629,11 @@ async function generateIdea() {
   btn.textContent = 'AI анализирует рынок...';
   result.innerHTML = '<div class="biz-loading"><div class="spinner"></div><p>AI анализирует рынок и генерирует детальную идею...<br><small>Это может занять 15-30 секунд</small></p></div>';
 
-  var prevNamesList = prevNames.length > 0 ? '\n\nУЖЕ ПРЕДЛОЖЕННЫЕ ИДЕИ (НЕ ПОВТОРЯЙ, придумай СОВЕРШЕННО ДРУГУЮ): ' + prevNames.join('; ') : '';
-  var dislikedList = bizDisliked.length > 0 ? '\nОтвергнутые идеи (не предлагай похожие): ' + bizDisliked.join(', ') : '';
-  var regionCtx = region ? '\nЦелевой регион/страна: ' + region + '. Анализируй ИМЕННО этот рынок — конкуренция, спрос, цены, аудитория в этом регионе.' : '';
-  var budgetCtx = budget ? '\nБюджет на запуск: ' + budget + '. СТРОГО ВАЖНО: общий бюджет на запуск НЕ ДОЛЖЕН превышать ' + budget + '! Подбирай бесплатные и дешёвые решения. Если бюджет $0-500 — используй бесплатный хостинг, open-source, no-code, бесплатный маркетинг.' : '';
+  var dislikedList = bizDisliked.length > 0 ? '\n\nНЕ предлагай идеи похожие на: ' + bizDisliked.join(', ') : '';
+  var regionCtx = region ? '\nЦелевой регион: ' + region : '';
+  var budgetCtx = budget ? '\nБюджет на запуск: ' + budget : '';
 
-  var sysPrompt = 'Ты — топ-эксперт по интернет-бизнесу и созданию сайтов. КРИТИЧЕСКИ ВАЖНЫЕ ПРАВИЛА:\n1. КАЖДЫЙ РАЗ генерируй УНИКАЛЬНУЮ, НОВУЮ идею — НИКОГДА не повторяйся\n2. Строго учитывай бюджет пользователя — если бюджет маленький, ВСЕ расходы должны быть в пределах этого бюджета\n3. Строго учитывай регион — анализируй именно указанный рынок\n4. Все цифры должны быть РЕАЛИСТИЧНЫМИ\n5. Внимательно читай запрос пользователя и отвечай именно на то что он просит';
+  var sysPrompt = 'Ты — топ-эксперт по интернет-бизнесу, стартапам и созданию веб-сайтов с 15+ летним опытом. Ты знаешь реальную статистику рынков, конкуренцию, SEO, маркетинг и монетизацию. Отвечай максимально детально, конкретно, с реальными цифрами и примерами. Все данные должны быть реалистичными — не завышай доходы, не занижай сложность.';
 
   try {
     var response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -6664,7 +6650,7 @@ async function generateIdea() {
         system: sysPrompt,
         messages: [{
           role: 'user',
-          content: 'Сгенерируй ОДНУ конкретную, креативную, УНИКАЛЬНУЮ бизнес-идею для веб-сайта.\n\nЗапрос пользователя: ' + prompt + regionCtx + budgetCtx + prevNamesList + dislikedList + '\n\nВАЖНО: Придумай НОВУЮ идею, отличную от всех предыдущих!' + '\n\nОтветь СТРОГО в JSON (без markdown, без ```json, только чистый JSON объект):\n{\n"name": "Название идеи (креативное, цепляющее)",\n"description": "Подробное описание идеи — 5-7 предложений. Что это за сайт, какую проблему решает, почему это нужно рынку прямо сейчас, в чём уникальность.",\n"targetAudience": "Детальное описание целевой аудитории — кто они, возраст, доход, боли, потребности",\n"difficulty": "число 1-5",\n"demand": "число 1-5",\n"revenue": "Детальная разбивка дохода: первый месяц — $X, через 3 месяца — $X, через 6 месяцев — $X, через 12 месяцев — $X. Объяснение откуда деньги, средний чек, конверсия.",\n"monetization": "5-7 конкретных способов монетизации с примерными ценами. Например: Подписка Basic $9/мес, Pro $29/мес; Комиссия с транзакций 5%; Реклама CPM $2-5; и т.д.",\n"techStack": "Конкретный стек: фронтенд, бэкенд, база данных, хостинг, API. С примерными ценами на инфраструктуру в месяц.",\n"promotion": "10 конкретных стратегий продвижения с бюджетом и ожидаемым ROI. Например: SEO (3-6 мес, бесплатно); Google Ads ($500/мес, CPC $1.5); Content marketing; Partnerships; и т.д.",\n"features": "10-15 ключевых функций сайта, каждая через точку с запятой. Подробно.",\n"competitors": "5-8 реальных конкурентов с их URL, примерным трафиком и слабыми местами. Например: competitor.com (~500K/мес, слабое SEO в EU)",\n"steps": "Детальный пошаговый план запуска из 10-12 шагов, каждый через точку с запятой. С временными рамками: Неделя 1-2: ...; Неделя 3-4: ...; Месяц 2: ...; и т.д.",\n"budget": "Разбивка бюджета: домен $X, хостинг $X/мес, дизайн $X, разработка $X, маркетинг первые 3 мес $X. Итого на запуск: $X. Итого на 6 месяцев: $X",\n"timeline": "Реалистичные сроки: MVP — X недель, бета — X месяцев, первые клиенты — X месяцев, окупаемость — X месяцев",\n"regions": "ТОП-20 стран/регионов для запуска, отсортированные по привлекательности. Формат: 1. США (85%) — огромный рынок, высокий CPM; 2. Канада (78%) — ...; и так до 20. Процент = рекомендация запуска (100% = идеально).",\n"risks": "5-7 главных рисков и как их минимизировать",\n"growth": "Стратегия роста на 1-3 года: как масштабировать, какие фичи добавить, партнёрства, выход на новые рынки"\n}'
+          content: 'Сгенерируй ОДНУ конкретную, креативную бизнес-идею для веб-сайта.\n\nЗапрос пользователя: ' + prompt + regionCtx + budgetCtx + dislikedList + '\n\nОтветь СТРОГО в JSON (без markdown, без ```json, только чистый JSON объект):\n{\n"name": "Название идеи (креативное, цепляющее)",\n"description": "Подробное описание идеи — 5-7 предложений. Что это за сайт, какую проблему решает, почему это нужно рынку прямо сейчас, в чём уникальность.",\n"targetAudience": "Детальное описание целевой аудитории — кто они, возраст, доход, боли, потребности",\n"difficulty": "число 1-5",\n"demand": "число 1-5",\n"revenue": "Детальная разбивка дохода: первый месяц — $X, через 3 месяца — $X, через 6 месяцев — $X, через 12 месяцев — $X. Объяснение откуда деньги, средний чек, конверсия.",\n"monetization": "5-7 конкретных способов монетизации с примерными ценами. Например: Подписка Basic $9/мес, Pro $29/мес; Комиссия с транзакций 5%; Реклама CPM $2-5; и т.д.",\n"techStack": "Конкретный стек: фронтенд, бэкенд, база данных, хостинг, API. С примерными ценами на инфраструктуру в месяц.",\n"promotion": "10 конкретных стратегий продвижения с бюджетом и ожидаемым ROI. Например: SEO (3-6 мес, бесплатно); Google Ads ($500/мес, CPC $1.5); Content marketing; Partnerships; и т.д.",\n"features": "10-15 ключевых функций сайта, каждая через точку с запятой. Подробно.",\n"competitors": "5-8 реальных конкурентов с их URL, примерным трафиком и слабыми местами. Например: competitor.com (~500K/мес, слабое SEO в EU)",\n"steps": "Детальный пошаговый план запуска из 10-12 шагов, каждый через точку с запятой. С временными рамками: Неделя 1-2: ...; Неделя 3-4: ...; Месяц 2: ...; и т.д.",\n"budget": "Разбивка бюджета: домен $X, хостинг $X/мес, дизайн $X, разработка $X, маркетинг первые 3 мес $X. Итого на запуск: $X. Итого на 6 месяцев: $X",\n"timeline": "Реалистичные сроки: MVP — X недель, бета — X месяцев, первые клиенты — X месяцев, окупаемость — X месяцев",\n"regions": "ТОП-20 стран/регионов для запуска, отсортированные по привлекательности. Формат: 1. США (85%) — огромный рынок, высокий CPM; 2. Канада (78%) — ...; и так до 20. Процент = рекомендация запуска (100% = идеально).",\n"risks": "5-7 главных рисков и как их минимизировать",\n"growth": "Стратегия роста на 1-3 года: как масштабировать, какие фичи добавить, партнёрства, выход на новые рынки"\n}'
         }]
       })
     });
