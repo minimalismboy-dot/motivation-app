@@ -6497,8 +6497,13 @@ function renderBusiness() {
       html += '<option value="$2000-10000">$2,000 — $10,000</option><option value="$10000+">$10,000+</option>';
       html += '</select>';
       html += '</div>';
-      html += '<button class="biz-gen-btn" id="bizGenBtn" onclick="generateIdea()">✨ Сгенерировать детальную идею</button>';
+      html += '<div style="display:flex;gap:8px;margin-top:10px;">';
+      html += '<button class="biz-gen-btn" id="bizGenBtn" onclick="generateIdea()" style="flex:2;">✨ Сгенерировать идею</button>';
+      html += '<button class="biz-gen-btn" id="bizRegionCompBtn" onclick="bizCompareRegions()" style="flex:1;background:linear-gradient(135deg,var(--green),#55efc4);">🌍 Сравнить регионы</button>';
       html += '</div>';
+      html += '</div>';
+      html += '<div style="margin-bottom:12px;"><button class="btn" style="width:100%;" onclick="toggleBizCalc()">📊 ' + (bizCalcVisible ? 'Скрыть' : 'Открыть') + ' калькулятор окупаемости</button></div>';
+      if (bizCalcVisible) html += renderBizCalculator();
       html += '<div id="bizResult"></div>';
       html += '<button class="btn" style="font-size:12px;margin-top:12px" onclick="clearBizKey()">Изменить API ключ</button>';
     }
@@ -6524,72 +6529,154 @@ function renderBusiness() {
 }
 
 function renderBizCard(idea, idx, isSavedList) {
-  var html = '<div class="biz-card">';
-  html += '<h3>' + (idea.name || 'Идея') + '</h3>';
-  html += '<div class="biz-desc">' + (idea.description || '') + '</div>';
-  
-  if (idea.targetAudience) {
-    html += '<div class="biz-meta">';
-    html += '<span class="biz-tag">🎯 ' + idea.targetAudience + '</span>';
-    if (idea.difficulty) html += '<span class="biz-tag--orange biz-tag">Сложность: ' + idea.difficulty + '/5</span>';
-    if (idea.demand) html += '<span class="biz-tag--green biz-tag">Спрос: ' + idea.demand + '/5</span>';
-    html += '</div>';
+  function fmt(text) { if(!text) return ''; return text.replace(/;/g,'</li><li>').replace(/^\s/,''); }
+  function section(icon, title, content, bg) {
+    if(!content) return '';
+    var hasList = content.indexOf(';') !== -1;
+    var body = hasList ? '<ul style="margin:0;padding-left:18px;"><li>' + fmt(content) + '</li></ul>' : '<p style="margin:0;line-height:1.7;">' + content + '</p>';
+    return '<details style="margin-bottom:2px;"><summary style="padding:12px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);' + (bg||'') + '">' + icon + ' ' + title + '</summary><div style="padding:12px 16px;font-size:13px;color:var(--text-secondary);line-height:1.6;' + (bg||'') + '">' + body + '</div></details>';
   }
 
-  if (idea.revenue) {
-    html += '<div class="biz-section-detail"><h4>💰 Примерный доход</h4><p>' + idea.revenue + '</p></div>';
+  var html = '<div class="dash-card" style="padding:0;overflow:hidden;">';
+  // Header
+  html += '<div style="padding:20px 20px 12px;">';
+  html += '<h3 style="font-size:18px;font-weight:800;margin-bottom:8px;line-height:1.3;">' + (idea.name || 'Идея') + '</h3>';
+  html += '<p style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:12px;">' + (idea.description || '') + '</p>';
+  // Badges
+  html += '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+  if(idea.targetAudience) html += '<span class="biz-tag">🎯 ' + idea.targetAudience + '</span>';
+  if(idea.difficulty) {
+    var diffColor = idea.difficulty<=2?'var(--green)':idea.difficulty<=3?'var(--orange)':'var(--red)';
+    html += '<span style="padding:4px 10px;border-radius:50px;font-size:11px;font-weight:600;background:var(--bg);color:'+diffColor+';">Сложность: ' + idea.difficulty + '/5</span>';
   }
-  if (idea.monetization) {
-    html += '<div class="biz-section-detail"><h4>💵 Монетизация</h4><p>' + idea.monetization + '</p></div>';
-  }
-  if (idea.techStack) {
-    html += '<div class="biz-section-detail"><h4>🛠 Технологии</h4><p>' + idea.techStack + '</p></div>';
-  }
-  if (idea.promotion) {
-    html += '<div class="biz-section-detail"><h4>📢 Продвижение</h4><p>' + idea.promotion + '</p></div>';
-  }
-  if (idea.features) {
-    html += '<div class="biz-section-detail"><h4>⚡ Ключевые функции</h4><p>' + idea.features + '</p></div>';
-  }
-  if (idea.competitors) {
-    html += '<div class="biz-section-detail"><h4>🔍 Конкуренты/примеры</h4><p>' + idea.competitors + '</p></div>';
-  }
-  if (idea.steps) {
-    html += '<div class="biz-section-detail"><h4>📋 Пошаговый план запуска</h4><p>' + idea.steps.replace(/;/g, '<br>• ') + '</p></div>';
-  }
-  if (idea.budget) {
-    html += '<div class="biz-section-detail"><h4>💳 Бюджет</h4><p>' + idea.budget + '</p></div>';
-  }
-  if (idea.timeline) {
-    html += '<div class="biz-section-detail"><h4>⏱ Сроки</h4><p>' + idea.timeline + '</p></div>';
-  }
-  if (idea.regions) {
-    html += '<div class="biz-section-detail" style="background:var(--green-bg)"><h4>🌍 ТОП регионов для запуска</h4><p style="white-space:pre-line">' + idea.regions.replace(/;/g, '\n') + '</p></div>';
-  }
-  if (idea.risks) {
-    html += '<div class="biz-section-detail" style="background:var(--red-bg)"><h4>⚠️ Риски</h4><p>' + idea.risks + '</p></div>';
-  }
-  if (idea.growth) {
-    html += '<div class="biz-section-detail"><h4>📈 Стратегия роста (1-3 года)</h4><p>' + idea.growth + '</p></div>';
-  }
-
-  html += '<div class="biz-actions" style="margin-top:14px">';
+  if(idea.demand) html += '<span style="padding:4px 10px;border-radius:50px;font-size:11px;font-weight:600;background:var(--green-bg);color:var(--green);">Спрос: ' + idea.demand + '/5</span>';
+  html += '</div></div>';
+  // Sections (collapsible)
+  html += '<div style="border-top:1px solid var(--border);">';
+  html += section('💰','Примерный доход', idea.revenue);
+  html += section('💵','Монетизация', idea.monetization);
+  html += section('💳','Бюджет', idea.budget);
+  html += section('⏱','Сроки', idea.timeline);
+  html += section('🛠','Технологии', idea.techStack);
+  html += section('⚡','Ключевые функции', idea.features);
+  html += section('📢','Продвижение', idea.promotion);
+  html += section('📋','План запуска', idea.steps);
+  html += section('🔍','Конкуренты', idea.competitors);
+  html += section('🌍','Лучшие регионы', idea.regions, 'background:var(--green-bg);');
+  html += section('⚠️','Риски', idea.risks, 'background:var(--red-bg);');
+  html += section('📈','Стратегия роста', idea.growth);
+  html += '</div>';
+  // Actions
+  html += '<div style="padding:14px 20px;display:flex;gap:8px;border-top:1px solid var(--border);">';
   if (isSavedList) {
-    html += '<button class="biz-dislike-btn" onclick="removeSavedIdea(' + idx + ')">Удалить</button>';
+    html += '<button class="btn btn-danger" style="flex:1;" onclick="removeSavedIdea(' + idx + ')">Удалить</button>';
+    html += '<button class="btn btn-primary" style="flex:1;" onclick="bizAnalyzeCompetitors(' + idx + ')">🔍 Анализ конкурентов</button>';
+    html += '<button class="btn" style="flex:1;" onclick="bizGenerateNames(' + idx + ')">💡 Названия</button>';
   } else {
     var isSaved = bizSaved.some(function(s) { return s.name === idea.name; });
     if (!isSaved) {
       var tempIdx = _bizTempIdeas.length;
       _bizTempIdeas.push(idea);
-      html += '<button class="biz-save-btn" onclick="saveBizIdea(' + tempIdx + ')">💾 Сохранить</button>';
+      html += '<button class="btn btn-primary" style="flex:1;" onclick="saveBizIdea(' + tempIdx + ')">💾 Сохранить</button>';
     } else {
-      html += '<span class="biz-tag--green biz-tag">✓ Сохранено</span>';
+      html += '<button class="btn" style="flex:1;color:var(--green);border-color:var(--green);" disabled>✓ Сохранено</button>';
     }
-    html += '<button class="biz-dislike-btn" onclick="dislikeBizIdea(\'' + (idea.name||'').replace(/'/g,"\\'") + '\',this)">👎 Не интересно</button>';
+    html += '<button class="btn" style="flex:1;" onclick="dislikeBizIdea(\'' + (idea.name||'').replace(/'/g,"\\'") + '\',this.closest(\'.dash-card\'))">👎</button>';
   }
-  html += '</div>';
-  html += '</div>';
+  html += '</div></div>';
   return html;
+}
+
+// ====== NEW: Competitor Analysis ======
+async function bizAnalyzeCompetitors(savedIdx) {
+  var idea = bizSaved[savedIdx]; if(!idea) return;
+  var modal = document.getElementById('videoModal');
+  var player = document.getElementById('videoPlayer');
+  if(!modal||!player) return;
+  player.innerHTML = '<div style="padding:30px;max-width:560px;margin:auto;color:var(--text);background:var(--card-bg);border-radius:16px;margin-top:40px;max-height:80vh;overflow-y:auto;"><h3 style="margin-bottom:12px;">🔍 Анализ конкурентов</h3><div id="bizCompResult"><div class="biz-loading"><div class="spinner"></div><p>AI анализирует конкурентов...</p></div></div><button class="btn" style="margin-top:16px;" onclick="closeVideoModal()">Закрыть</button></div>';
+  modal.classList.add('active');
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':bizApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',
+        content:'Проведи детальный конкурентный анализ для бизнес-идеи: "'+idea.name+'"\nОписание: '+idea.description+'\n\nДля каждого из 5-8 главных конкурентов укажи:\n- Название и URL\n- Примерный трафик\n- Сильные стороны\n- Слабые стороны (где можно победить)\n- Ценовая политика\n- Уникальное преимущество\n\nВ конце дай общий вывод: как отстроиться от конкурентов, какую нишу занять.\n\nФормат: красивый текст с заголовками, НЕ JSON.'}]})});
+    var d = await r.json();
+    document.getElementById('bizCompResult').innerHTML = '<div style="font-size:13px;line-height:1.7;white-space:pre-line;">' + (d.content[0].text||'Ошибка') + '</div>';
+  } catch(e) { document.getElementById('bizCompResult').innerHTML = '<p style="color:var(--red)">Ошибка: '+e.message+'</p>'; }
+}
+
+// ====== NEW: Name Generator ======
+async function bizGenerateNames(savedIdx) {
+  var idea = bizSaved[savedIdx]; if(!idea) return;
+  var modal = document.getElementById('videoModal');
+  var player = document.getElementById('videoPlayer');
+  if(!modal||!player) return;
+  player.innerHTML = '<div style="padding:30px;max-width:560px;margin:auto;color:var(--text);background:var(--card-bg);border-radius:16px;margin-top:40px;max-height:80vh;overflow-y:auto;"><h3 style="margin-bottom:12px;">💡 Генератор названий</h3><div id="bizNamesResult"><div class="biz-loading"><div class="spinner"></div><p>AI придумывает названия...</p></div></div><button class="btn" style="margin-top:16px;" onclick="closeVideoModal()">Закрыть</button></div>';
+  modal.classList.add('active');
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':bizApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',
+        content:'Придумай 15 креативных названий для сайта/бизнеса: "'+idea.name+'"\nОписание: '+idea.description+'\n\nДля каждого названия:\n1. Само название\n2. Доступен ли домен .com (предположи)\n3. Почему это название хорошее\n4. Варианты домена (.com, .io, .app, .co)\n\nТакже предложи 5 вариантов логотипа (опиши текстом).\n\nФормат: красивый нумерованный список, НЕ JSON.'}]})});
+    var d = await r.json();
+    document.getElementById('bizNamesResult').innerHTML = '<div style="font-size:13px;line-height:1.7;white-space:pre-line;">' + (d.content[0].text||'Ошибка') + '</div>';
+  } catch(e) { document.getElementById('bizNamesResult').innerHTML = '<p style="color:var(--red)">Ошибка: '+e.message+'</p>'; }
+}
+
+// ====== NEW: ROI Calculator ======
+var bizCalcVisible = false;
+function toggleBizCalc() { bizCalcVisible = !bizCalcVisible; renderBusiness(); }
+function renderBizCalculator() {
+  return '<div class="dash-card" style="padding:20px;">' +
+    '<h3>📊 Калькулятор окупаемости</h3>' +
+    '<div class="form-group" style="margin-bottom:10px;"><label style="font-size:12px;color:var(--text-secondary);">Начальные вложения ($)</label><input type="number" id="calcInvest" value="1000" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--card-bg);color:var(--text);font-size:14px;"></div>' +
+    '<div class="form-group" style="margin-bottom:10px;"><label style="font-size:12px;color:var(--text-secondary);">Ежемесячные расходы ($)</label><input type="number" id="calcMonthly" value="200" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--card-bg);color:var(--text);font-size:14px;"></div>' +
+    '<div class="form-group" style="margin-bottom:10px;"><label style="font-size:12px;color:var(--text-secondary);">Ожидаемый доход/мес ($) через 3 мес</label><input type="number" id="calcRevenue3" value="500" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--card-bg);color:var(--text);font-size:14px;"></div>' +
+    '<div class="form-group" style="margin-bottom:10px;"><label style="font-size:12px;color:var(--text-secondary);">Ожидаемый доход/мес ($) через 6 мес</label><input type="number" id="calcRevenue6" value="1500" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--card-bg);color:var(--text);font-size:14px;"></div>' +
+    '<button class="btn btn-primary" style="width:100%;" onclick="calcROI()">Рассчитать</button>' +
+    '<div id="calcResult" style="margin-top:12px;"></div></div>';
+}
+function calcROI() {
+  var invest = parseFloat(document.getElementById('calcInvest').value)||0;
+  var monthly = parseFloat(document.getElementById('calcMonthly').value)||0;
+  var rev3 = parseFloat(document.getElementById('calcRevenue3').value)||0;
+  var rev6 = parseFloat(document.getElementById('calcRevenue6').value)||0;
+  var html = '<div style="padding:14px;background:var(--bg);border-radius:12px;font-size:13px;">';
+  var total = invest, breakeven = -1;
+  html += '<table style="width:100%;border-collapse:collapse;font-size:12px;">';
+  html += '<tr style="border-bottom:2px solid var(--border);"><th style="text-align:left;padding:6px;">Месяц</th><th>Расходы</th><th>Доход</th><th>Прибыль</th><th>Баланс</th></tr>';
+  for(var m=1;m<=12;m++){
+    var rev = m<=3 ? rev3*(m/3) : m<=6 ? rev3+(rev6-rev3)*((m-3)/3) : rev6*1.1;
+    var exp = m===1 ? invest+monthly : monthly;
+    var profit = Math.round(rev - exp);
+    total += profit;
+    if(breakeven<0 && total>=0) breakeven = m;
+    var color = total>=0?'var(--green)':'var(--red)';
+    html += '<tr style="border-bottom:1px solid var(--border);"><td style="padding:6px;font-weight:600;">'+m+'</td><td style="text-align:center;">$'+Math.round(exp)+'</td><td style="text-align:center;color:var(--green);">$'+Math.round(rev)+'</td><td style="text-align:center;color:'+(profit>=0?'var(--green)':'var(--red)')+';">$'+profit+'</td><td style="text-align:center;font-weight:700;color:'+color+';">$'+Math.round(total)+'</td></tr>';
+  }
+  html += '</table>';
+  html += '<div style="margin-top:12px;padding:10px;background:var(--card-bg);border-radius:8px;">';
+  html += '<div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span>Окупаемость:</span><strong style="color:'+(breakeven>0?'var(--green)':'var(--red)')+';">'+(breakeven>0?'Месяц '+breakeven:'Не окупится за год')+'</strong></div>';
+  html += '<div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span>ROI за 12 мес:</span><strong>'+Math.round((total/(invest+monthly*12))*100)+'%</strong></div>';
+  html += '<div style="display:flex;justify-content:space-between;"><span>Итог за 12 мес:</span><strong style="color:'+(total>=0?'var(--green)':'var(--red)')+';">$'+Math.round(total)+'</strong></div>';
+  html += '</div></div>';
+  document.getElementById('calcResult').innerHTML = html;
+}
+
+// ====== NEW: Region Comparison ======
+async function bizCompareRegions() {
+  var prompt = document.getElementById('bizPrompt').value.trim();
+  if(!prompt) { alert('Сначала опиши идею'); return; }
+  var btn = document.getElementById('bizRegionCompBtn');
+  if(btn) { btn.disabled = true; btn.textContent = 'Анализирую...'; }
+  var result = document.getElementById('bizResult');
+  result.innerHTML = '<div class="biz-loading"><div class="spinner"></div><p>AI сравнивает регионы...</p></div>';
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':bizApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',
+        content:'Для бизнес-идеи: "'+prompt+'"\n\nСравни 15 стран/регионов для запуска.\n\nДля КАЖДОГО региона дай:\n- Оценка привлекательности (0-100%)\n- Размер рынка\n- Уровень конкуренции (низкая/средняя/высокая)\n- Средний чек в этой нише\n- Стоимость привлечения клиента\n- Особенности рынка\n- Рекомендация (🟢 рекомендую / 🟡 можно / 🔴 не стоит)\n\nОтсортируй от лучшего к худшему.\n\nФормат: красивый текст, НЕ JSON. Каждый регион отдельным блоком.'}]})});
+    var d = await r.json();
+    result.innerHTML = '<div class="dash-card"><h3>🌍 Сравнение регионов</h3><div style="font-size:13px;line-height:1.7;white-space:pre-line;">'+(d.content[0].text||'Ошибка')+'</div></div>';
+  } catch(e) { result.innerHTML = '<p style="color:var(--red)">Ошибка: '+e.message+'</p>'; }
+  if(btn) { btn.disabled = false; btn.textContent = '🌍 Сравнить регионы'; }
 }
 
 function saveBizKey() {
